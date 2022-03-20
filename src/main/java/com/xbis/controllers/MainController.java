@@ -1,7 +1,6 @@
 package com.xbis.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -9,13 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class MainController {
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String printHelloWorld(ModelMap modelMap){
-
-        // add attribute to load modelMap
-        modelMap.addAttribute("message",
-                "Hello World and Welcome to Spring MVC!");
-
-        // return the name of the file to be loaded "hello_world.jsp"
+    public String index(){
         return "index";
     }
 
