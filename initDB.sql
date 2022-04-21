@@ -1,5 +1,7 @@
 drop database if exists ratemiodb;
 create database ratemiodb;
+create user ratemiouser with encrypted password 'postgres' superuser;
+grant all privileges on database ratemiodb to ratemiouser;
 \c ratemiodb postgres;
 
 create table users (

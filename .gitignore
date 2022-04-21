@@ -1,5 +1,9 @@
+/.idea
+.classpath
+.project
+.settings
 
-.idea
+target
 
 NOTES.md
 

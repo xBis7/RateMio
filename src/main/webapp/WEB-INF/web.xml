@@ -5,7 +5,7 @@
                     http://java.sun.com/xml/ns/javaee
                     http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-    <display-name>RateMio</display-name>
+    <display-name>RateMiox</display-name>
 
     <!-- Step 1: Configure Spring MVC Dispatcher Servlet -->
     <servlet>
@@ -23,5 +23,9 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
 </web-app>
