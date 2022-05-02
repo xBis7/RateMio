@@ -1,0 +1,14 @@
+.NavigationBar {
+    position: fixed;
+    top: 0;
+    margin: 0;
+    padding: 0;  
+}
+
+#loginButton {
+    margin: 10px;
+}
+
+#registerButton {
+    margin: 10px;
+}
