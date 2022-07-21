@@ -29,6 +29,7 @@ public class PasswordUtil {
     public static String hashThePassword(String plainTextPassword, String salt) {
         char[] chars = plainTextPassword.toCharArray();
         byte[] bytes = salt.getBytes();
+        String hashedPass;
 
         PBEKeySpec spec = new PBEKeySpec(chars, bytes, ITERATIONS, KEY_LENGTH);
         Arrays.fill(chars, Character.MIN_VALUE);
@@ -36,12 +37,13 @@ public class PasswordUtil {
         try {
             SecretKeyFactory fac = SecretKeyFactory.getInstance(ALGORITHM);
             byte[] securePassword = fac.generateSecret(spec).getEncoded();
-            return Base64.getEncoder().encodeToString(securePassword);
+            hashedPass = Base64.getEncoder().encodeToString(securePassword);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
             return ex.toString();
         } finally {
             spec.clearPassword();
         }
+        return hashedPass;
     }
 
     public static boolean verifyThePassword(String plainTextPassword, String hashedPassword, String salt) {

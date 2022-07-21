@@ -45,8 +45,9 @@ public class UserDAOImpl implements UserDAO {
     public User addUser(User user) {
         Session session = this.sessionFactory.getCurrentSession();
         user.setSalt(PasswordUtil.generateSalt());
-        String hashedPassword = PasswordUtil.hashThePassword(user.getHashedPassword(), user.getSalt());
-        user.setHashedPassword(hashedPassword);
+        String hashedPassword = PasswordUtil.hashThePassword(user.getPassword(), user.getSalt());
+        user.setPassword(hashedPassword);
+        user.setAccessLevel(3);
         session.persist(user);
         return user;
     }
@@ -65,7 +66,7 @@ public class UserDAOImpl implements UserDAO {
             setActiveUserList(list);
 
             //getting logged in user's password hash
-            String hashedPass = activeUserList.get(activeUserList.size()-1).getHashedPassword();
+            String hashedPass = activeUserList.get(activeUserList.size()-1).getPassword();
 
             //getting salt
             String salt = activeUserList.get(activeUserList.size()-1).getSalt();

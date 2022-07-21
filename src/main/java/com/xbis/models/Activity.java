@@ -22,7 +22,7 @@ public class Activity {
     @JoinColumn(name= "ownerid", nullable = false)
     private User user;
 
-    @Column(name = "activitynane", nullable = false, unique = true)
+    @Column(name = "activityname", nullable = false, unique = true)
     private String name;
 
     @Column(name = "membernum")

@@ -23,7 +23,7 @@ public class User {
     private String email;
 
     @Column(name = "hashedpassword")
-    private String hashedPassword;
+    private String password;
 
     @Column(name = "salt")
     private String salt;
@@ -35,12 +35,13 @@ public class User {
         super();
     }
 
-    public User(long userid, String username, String email, String hashedPassword, String salt) {
+    public User(long userid, String username, String email,
+                String password, String salt) {
         super();
         this.userid = userid;
         this.username = username;
         this.email = email;
-        this.hashedPassword = hashedPassword;
+        this.password = password;
         this.salt = salt;
         this.accessLevel = 3;           //all users will get access level = 3
     }
@@ -69,12 +70,12 @@ public class User {
         this.email = email;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getSalt() {
