@@ -11,9 +11,6 @@ const REGISTER_URL = '/newUser';
 
 export default function Register() {
 
-  const userRef = useRef();
-  const errRef = useRef();
-
   const [email, setEmail] = useState('');
 
   const [username, setUsername] = useState('');
@@ -31,28 +28,11 @@ export default function Register() {
   const [errMessage, setErrMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    userRef.current.focus();
-  }, [])
-
-  useEffect(() => {
-    setValidName(USER_REGEX.test(username));
-  }, [username])
-
-  useEffect(() => {
-    setValidPassword(PWD_REGEX.test(password));
-    setValidConf(password === confPassword);
-  }, [password, confPassword])
-
-  useEffect(() => {
-    setErrMessage('');
-  }, [email, username, password, confPassword])
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     try {
-      const response = await axios.post(REGISTER_URL,
+      const response = await axios.post('http://localhost:8080/RateMio/newUser',
         JSON.stringify({ username, email, password }), 
         {
           headers : { 'Content-Type': 'application/json' },
@@ -73,8 +53,26 @@ export default function Register() {
       } else {
         setErrMessage('Registration Failed')
       }
-      errRef.current.focus();
     }
+    alert('Successful registration!');
+/*    window.location.href = '/login' */
+  }
+
+  async function onRegister(event) {
+    event.preventDefault()
+    await fetch(`http://localhost:8080/RateMio/newUser`, {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password
+      }),
+    })
+    alert('Επιτυχής Εγγραφή')
+    window.location.href = '/login'
   }
 
   return (
@@ -83,7 +81,7 @@ export default function Register() {
         <section>
           <h1>Success!</h1>
           <p>
-            <a href="#">Log In</a>
+            <a href="/login">Log In</a>
           </p>
         </section>
       ) : (
@@ -110,7 +108,6 @@ export default function Register() {
               <Form.Control
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
-                ref={userRef}
                 required 
                 type="text" 
                 placeholder="Enter Username"
@@ -147,7 +144,7 @@ export default function Register() {
           <p>
             Already have an account?
             <br/>
-            <a href='#'>Log In</a>
+            <a href='/login'>Log In</a>
           </p>
         </section>
       )}
