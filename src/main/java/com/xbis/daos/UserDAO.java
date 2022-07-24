@@ -7,25 +7,25 @@ import java.util.List;
 
 public interface UserDAO {
 
-    public List<User> getAllUsers();
+  public List<User> getAllUsers();
 
-    public User getUser(long userId);
+  public User getUser(long userId);
 
-    public User addUser(User user);
+  public User addUser(User user);
 
-    public boolean checkUser(String username, String password);
+  public boolean checkUser(String username, String password);
 
-    public List<Activity> getAllUserActivities(long userId);
+  public List<Activity> getAllUserActivities(long userId);
 
-    public void updateAccessLevel(User user, int level);
+  public void updateAccessLevel(User user, int level);
 
-    public boolean deleteUser(long userId);
+  public boolean deleteUser(long userId);
 
-    public void setActiveUserList(List<User> activeUserList);
+  public void setActiveUserList(List<User> activeUserList);
 
-    public List<User> getActiveUserList();
+  public List<User> getActiveUserList();
 
-    public void userLogin(User user);
+  public void userLogin(User user);
 
-    public void userLogout();
+  public void userLogout();
 }

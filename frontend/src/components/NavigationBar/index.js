@@ -16,7 +16,7 @@ export default function NavigationBar() {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+                        <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/about">About</Nav.Link>
                     </Nav>
                     <Form className="d-flex">

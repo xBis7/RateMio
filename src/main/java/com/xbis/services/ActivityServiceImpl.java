@@ -12,54 +12,54 @@ import java.util.List;
 @Service("activityService")
 public class ActivityServiceImpl implements ActivityService {
 
-    @Autowired
-    ActivityDAO activityDAO;
+  @Autowired
+  ActivityDAO activityDAO;
 
-    @Override
-    @Transactional
-    public List<Activity> getAllActivities() {
-        return activityDAO.getAllActivities();
-    }
+  @Override
+  @Transactional
+  public List<Activity> getAllActivities() {
+    return activityDAO.getAllActivities();
+  }
 
-    @Override
-    @Transactional
-    public List<Activity> getAllUserActivities(long ownerId) {
-        return activityDAO.getAllUserActivities(ownerId);
-    }
+  @Override
+  @Transactional
+  public List<Activity> getAllUserActivities(long ownerId) {
+    return activityDAO.getAllUserActivities(ownerId);
+  }
 
-    @Override
-    @Transactional
-    public List<User> getAllActivityUsers(long activityId) {
-        return activityDAO.getAllActivityUsers(activityId);
-    }
+  @Override
+  @Transactional
+  public List<User> getAllActivityUsers(long activityId) {
+    return activityDAO.getAllActivityUsers(activityId);
+  }
 
-    @Override
-    @Transactional
-    public Activity getActivity(long activityId) {
-        return activityDAO.getActivity(activityId);
-    }
+  @Override
+  @Transactional
+  public Activity getActivity(long activityId) {
+    return activityDAO.getActivity(activityId);
+  }
 
-    @Override
-    @Transactional
-    public Activity addActivity(Activity activity) {
-        return activityDAO.addActivity(activity);
-    }
+  @Override
+  @Transactional
+  public Activity addActivity(Activity activity) {
+    return activityDAO.addActivity(activity);
+  }
 
-    @Override
-    @Transactional
-    public void updateMemberNum(Activity activity, int num) {
-        activityDAO.updateMemberNum(activity, num);
-    }
+  @Override
+  @Transactional
+  public void updateMemberNum(Activity activity, int num) {
+    activityDAO.updateMemberNum(activity, num);
+  }
 
-    @Override
-    @Transactional
-    public void updateTeamNum(Activity activity, int num) {
-        activityDAO.updateTeamNum(activity, num);
-    }
+  @Override
+  @Transactional
+  public void updateTeamNum(Activity activity, int num) {
+    activityDAO.updateTeamNum(activity, num);
+  }
 
-    @Override
-    @Transactional
-    public boolean deleteActivity(long activityId) {
-        return activityDAO.deleteActivity(activityId);
-    }
+  @Override
+  @Transactional
+  public boolean deleteActivity(long activityId) {
+    return activityDAO.deleteActivity(activityId);
+  }
 }

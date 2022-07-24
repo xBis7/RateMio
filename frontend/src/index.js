@@ -1,18 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './context/AuthProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
   <BrowserRouter>
-    <AuthProvider>
       <App />
-    </AuthProvider>
-  </BrowserRouter>,
-  document.getElementById('root')
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function
