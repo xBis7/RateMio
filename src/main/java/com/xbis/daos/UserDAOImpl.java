@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public List<User> getAllUsers() {
     Session session = this.sessionFactory.getCurrentSession();
-    List <User> userList = session.createQuery("select * from users;").list();
+    List <User> userList = session.createQuery("SELECT userid, username, email, accesslevel FROM User").list();
     return userList;
   }
 
@@ -58,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
     Session session = sessionFactory.openSession();
     boolean userAuthenticated = false;
 
-    String sqlQuery = "SELECT u FROM users u WHERE u.username= :name";
+    String sqlQuery = "SELECT u FROM User u WHERE u.username=:name";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("name", username);
     List list = query.getResultList();

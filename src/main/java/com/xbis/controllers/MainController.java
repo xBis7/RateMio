@@ -1,18 +1,21 @@
 package com.xbis.controllers;
 
+import com.xbis.models.AuthToken;
 import com.xbis.models.User;
 import com.xbis.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.Map;
+import java.util.List;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class MainController {
 
@@ -28,20 +31,22 @@ public class MainController {
       consumes = {"application/json"},
       produces = {"application/json"})
   @ResponseBody
-  public String authentication(@RequestBody User user, BindingResult result, Map model) {
-
-    if (result.hasErrors()) {
-      return "redirect:/login";
-    }
+  public AuthToken authentication(@RequestBody User user) {
 
     boolean userExists = userService.checkUser(user.getUsername(), user.getPassword());
+    AuthToken authToken;
+
     if (userExists) {
-      model.put("userAuth", user);
-      return "redirect:/loggedIn";
+      List<User> activeUserList = userService.getActiveUserList();
+      User activeUser = activeUserList.get(activeUserList.size()-1);
+
+      authToken = new AuthToken(activeUser.getUsername(),
+          activeUser.getEmail(), activeUser.getAccessLevel());
     } else {
-      result.rejectValue("username","invaliduser");
-      return "redirect:/login";
+      authToken = new AuthToken(null, null, 0);
     }
+
+    return authToken;
   }
 
   @RequestMapping(value = "/getUser", method = RequestMethod.GET,
@@ -53,16 +58,12 @@ public class MainController {
   }
 
   @RequestMapping(value = "/newUser", method = RequestMethod.POST,
-      consumes = {"application/json"})
-  public String newUser(@RequestBody User user) {
+      consumes = {"application/json"},
+      produces = {"application/json"})
+  @ResponseBody
+  public User newUser(@RequestBody User user) {
     userService.addUser(user);
-    return "redirect:/login";
-  }
-
-  @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
-  public String delete(@ModelAttribute("user") User user) {
-    userService.deleteUser(user.getUserId());
-    return "redirect:/home";
+    return user;
   }
 
   @RequestMapping(value="/logout", method = RequestMethod.GET)

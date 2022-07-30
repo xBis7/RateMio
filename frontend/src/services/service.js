@@ -18,6 +18,10 @@ class DataService {
     });
   }
 
+  getAllUsers() {
+    return axios.get('/getAllUsers');
+  }
+
 }
 
 export default new DataService();

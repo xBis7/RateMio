@@ -6,35 +6,40 @@ import { Form, Button } from 'react-bootstrap';
 
 export default function Login() {
 
-  const [user, setUser] = useState('');
-
   const [username, setUsername] = useState('');
 
   const [password, setPassword] = useState('');
+
+  const [auth, setAuth] = useState(false);
 
   const [errMessage, setErrMessage] = useState('');
 
   const userAuth = async (event) => {
     event.preventDefault();
 
-    setUser({
+    const user = {
       username: username,
       password: password
-    });
+    };
 
     DataService.login(user)
       .then(response => {
-        setUser(response.data);
-        alert('Successful user authentication!');
-        window.location.href = '/dashboard';
+        if (JSON.stringify(response.data.username) === 'null') {
+          alert('User Authentication failed!');
+          window.location.href = '/login';
+        } else {
+          alert('Successful user authentication!');
+          window.location.href = '/dashboard';
+        }
       }).catch(err => {
         if (!err.response) {
           setErrMessage('No Server Response!');
-        } else if (err.response.status < 500) {
+        } else if (err.response.status === 404) {
           setErrMessage('User authentication failed!');
         } else {
           setErrMessage('Error: ' + err.response.data);
         }
+        alert(errMessage);
       })
   }
 

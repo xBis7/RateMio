@@ -1,6 +1,5 @@
 package com.xbis.daos;
 
-import com.xbis.models.Activity;
 import com.xbis.models.Review;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
@@ -27,9 +26,9 @@ public class ReviewDAOImpl implements ReviewDAO {
   @Override
   public List<Review> getAllReviewerReviews(long reviewerId) {
     Session session = this.sessionFactory.getCurrentSession();
-    String sqlQuery = "select * from reviews where reviews.reviewerid = ?0;";
+    String sqlQuery = "SELECT r FROM Review r WHERE r.reviewerid = :reviewerid";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter(0, reviewerId);
+    query.setParameter("reviewerid", reviewerId);
     List <Review> list = query.getResultList();
     return list;
   }
@@ -37,9 +36,9 @@ public class ReviewDAOImpl implements ReviewDAO {
   @Override
   public List<Review> getAllUserReviews(long userId) {
     Session session = this.sessionFactory.getCurrentSession();
-    String sqlQuery = "select * from reviews where reviews.userid = ?0;";
+    String sqlQuery = "SELECT r FROM Review r WHERE r.userid = :userid";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter(0, userId);
+    query.setParameter("userid", userId);
     List <Review> list = query.getResultList();
     return list;
   }

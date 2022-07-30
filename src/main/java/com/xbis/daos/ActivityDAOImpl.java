@@ -27,16 +27,16 @@ public class ActivityDAOImpl implements ActivityDAO {
   @Override
   public List<Activity> getAllActivities() {
     Session session = this.sessionFactory.getCurrentSession();
-    List <Activity> activityList = session.createQuery("select * from activities;").list();
+    List <Activity> activityList = session.createQuery("SELECT a FROM Activity a").list();
     return activityList;
   }
 
   @Override
   public List<Activity> getAllUserActivities(long ownerId) {
     Session session = this.sessionFactory.getCurrentSession();
-    String sqlQuery = "select * from activities where activities.ownerid = ?0";
+    String sqlQuery = "SELECT a FROM Activity a WHERE a.ownerid = :ownerid";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter(0, ownerId);
+    query.setParameter("ownerid", ownerId);
     List<Activity> list = query.getResultList();
     return list;
   }
@@ -44,9 +44,9 @@ public class ActivityDAOImpl implements ActivityDAO {
   @Override
   public List<User> getAllActivityUsers(long activityId) {
     Session session = this.sessionFactory.getCurrentSession();
-    String sqlQuery = "select username from users, activity_members where activity_members.activityid = ?0 and activity_members.userid = users.userid;";
+    String sqlQuery = "SELECT username FROM User, ActivityMember where ActivityMember.activityid = :activityId and ActivityMember.userid = User.userid";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter(0, activityId);
+    query.setParameter("activityId", activityId);
     List<User> list = query.getResultList();
     return list;
   }

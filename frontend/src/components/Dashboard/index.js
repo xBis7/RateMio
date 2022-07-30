@@ -6,8 +6,6 @@ import { Form, Button } from 'react-bootstrap';
 
 export default function Dashboard() {
 
-  const [user, setUser] = useState('');
-
   const [username, setUsername] = useState('');
 
   const [id, setId] = useState('');
@@ -19,13 +17,12 @@ export default function Dashboard() {
 
     DataService.getUser(id)
       .then(response => {
-        setUser(JSON.stringify(response.data));
         setUsername(JSON.stringify(response.data.username));
         //window.location.href = '/dashboard';
       }).catch(err => {
         setErrMessage('Error: ' + err.response.data);
+        alert(errMessage);
       })
-
   }
 
   return (
