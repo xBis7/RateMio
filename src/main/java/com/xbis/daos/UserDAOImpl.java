@@ -30,7 +30,11 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public List<User> getAllUsers() {
     Session session = this.sessionFactory.getCurrentSession();
-    List <User> userList = session.createQuery("SELECT userid, username, email, accesslevel FROM User").list();
+
+    String sqlQuery = "SELECT userid, username, email, accessLevel FROM User";
+    Query query = session.createQuery(sqlQuery);
+    List <User> userList = query.getResultList();
+
     return userList;
   }
 

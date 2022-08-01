@@ -20,6 +20,23 @@ class DataService {
 
   getAllUsers() {
     return axios.get('/getAllUsers');
+  } 
+
+  deleteUser(id) {
+    return axios.delete('/deleteUser', {
+      params: {
+        id
+      }
+    });
+  }
+
+  updateUserAccess(id, level) {
+    return axios.put('/updateAccess', {
+      params: {
+        id,
+        level
+      }
+    });
   }
 
 }
