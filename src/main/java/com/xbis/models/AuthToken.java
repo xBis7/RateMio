@@ -2,16 +2,20 @@ package com.xbis.models;
 
 public class AuthToken {
 
+  private long userid;
   private String username;
-
   private String email;
+  private int accesslevel;
 
-  private int accessLevel;
-
-  public AuthToken(String username, String email, int accessLevel) {
+  public AuthToken(long userid, String username, String email, int accesslevel) {
+    this.userid = userid;
     this.username = username;
     this.email = email;
-    this.accessLevel = accessLevel;
+    this.accesslevel = accesslevel;
+  }
+
+  public long getUserId() {
+    return userid;
   }
 
   public void setUsername(String username) {
@@ -30,11 +34,11 @@ public class AuthToken {
     return email;
   }
 
-  public void setAccessLevel(int accessLevel) {
-    this.accessLevel = accessLevel;
+  public void setAccessLevel(int accesslevel) {
+    this.accesslevel = accesslevel;
   }
 
   public int getAccessLevel() {
-    return accessLevel;
+    return accesslevel;
   }
 }

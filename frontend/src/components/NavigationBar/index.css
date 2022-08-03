@@ -9,6 +9,15 @@
     margin: 10px;
 }
 
+#logoutButton {
+    margin: 10px;
+}
+
 #registerButton {
+    margin: 10px;
+}
+
+#username {
+    color: white;
     margin: 10px;
 }

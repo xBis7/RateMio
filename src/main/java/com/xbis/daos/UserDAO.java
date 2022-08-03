@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserDAO {
 
-  public List<User> getAllUsers();
+  public List<User> getAllUsers(long currentUserId);
 
   public User getUser(long userId);
 

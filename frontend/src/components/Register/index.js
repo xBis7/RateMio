@@ -35,7 +35,7 @@ export default function Register() {
         } else if (err.response.status === 409) {
           setErrMessage('Username already taken!');
         } else {
-          setErrMessage('Error: ' + err.response.data);
+          setErrMessage('Server Error: ' + err.response.data);
         }
         alert(errMessage);
       }) 

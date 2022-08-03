@@ -2,25 +2,32 @@ import './index.css'
 import DataService from '../../services/service';
 import React from 'react';
 import { useState, useEffect } from "react";
-import { Dropdown, DropdownButton, Button, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 
 export default function AdminDashboard() {
 
   const [users, setUsers] = useState('');
 
+  const [authUser, setAuthUser] = useState();
+
   const [errMessage, setErrMessage] = useState('');
 
   useEffect(() => {
-    getAllUsers();
+    const loggedUser = localStorage.getItem('authUser');
+    const user = JSON.parse(loggedUser);
+    if (user) {
+      setAuthUser(JSON.stringify(user));
+      getAllUsers(user.userId);
+    }
   }, []);
 
-  const getAllUsers = async () => {
+  const getAllUsers = async (currId) => {
     
-    DataService.getAllUsers()
+    DataService.getAllUsers(currId)
       .then(response => {
         setUsers(response.data);
       }).catch(err => {
-        setErrMessage('Error: ' + err.response);
+        setErrMessage('Server Error: ' + err.response);
         alert(errMessage);
       })
   }
@@ -30,13 +37,12 @@ export default function AdminDashboard() {
       .then(response => {
         if(JSON.stringify(response.data.success) === 'true') {
           alert('User successfuly deleted!');
-          window.location.href = '/admindashboard';
         } else {
           alert('User delete failed!');
-          window.location.href = '/home';
         }
+        window.location.href = '/admindashboard';
       }).catch(err => {
-        setErrMessage('Error: ' + err.response.data);
+        setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
       })
   }
@@ -46,17 +52,16 @@ export default function AdminDashboard() {
       .then(response => {
         if(JSON.stringify(response.data.success) === 'true') {
           if (level === 2) {
-            alert('User has super access!');
+            alert('User now has super access!');
           } else {
-            alert('User has basic access!');
+            alert('User now has basic access!');
           }
-          window.location.href = '/admindashboard';
         } else { 
-          alert('User delete failed!');
-          window.location.href = '/home';
+          alert('Updating user access failed!');
         }
+        window.location.href = '/admindashboard'
       }).catch(err => {
-        setErrMessage('Error: ' + err.response.data);
+        setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
       })
   }
@@ -70,6 +75,10 @@ export default function AdminDashboard() {
           <th>Username</th>
           <th>Email</th>
           <th>Access Level</th>
+          <th>Delete User</th>
+          <th>Update Access to</th>
+          <th>Preview Activities</th>
+          <th>Preview Reviews</th>
           <th></th>
           <th></th>
         </tr>
@@ -81,14 +90,26 @@ export default function AdminDashboard() {
             <td>{item[3]}</td>
             <td>
               <Button variant="danger" onClick={() => deleteUser(parseFloat(item[0]))}>
-                Delete User
+                Delete
               </Button>
             </td>
             <td>
-            <DropdownButton variant='info' id="dropdown-basic-button" title="Update Access">
-              <Dropdown.Item onClick={() => updateAccess(parseFloat(item[0]), 2)}>Super user</Dropdown.Item>
-              <Dropdown.Item onClick={() => updateAccess(parseFloat(item[0]), 3)}>Basic user</Dropdown.Item>
-            </DropdownButton>
+                {item[3] === 2 &&
+                  <Button variant='info' onClick={() => updateAccess(parseFloat(item[0]), 3)}>
+                    Basic
+                  </Button>
+                }
+                {item[3] === 3 &&
+                  <Button variant='info' onClick={() => updateAccess(parseFloat(item[0]), 2)}>
+                    Super
+                  </Button>
+                }            
+            </td>
+            <td>
+              <Button variant='secondary'>Activities</Button>
+            </td>
+            <td>
+              <Button variant='secondary'>Reviews</Button>
             </td>
           </tr>
         ))}

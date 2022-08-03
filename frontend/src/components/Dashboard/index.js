@@ -20,7 +20,7 @@ export default function Dashboard() {
         setUsername(JSON.stringify(response.data.username));
         //window.location.href = '/dashboard';
       }).catch(err => {
-        setErrMessage('Error: ' + err.response.data);
+        setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
       })
   }

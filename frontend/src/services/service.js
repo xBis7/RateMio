@@ -18,8 +18,12 @@ class DataService {
     });
   }
 
-  getAllUsers() {
-    return axios.get('/getAllUsers');
+  getAllUsers(id) {
+    return axios.get('/getAllUsers', {
+      params: {
+        id
+      }
+    });
   } 
 
   deleteUser(id) {
@@ -30,15 +34,15 @@ class DataService {
     });
   }
 
+  //axios.put(url[, data[, config]])
   updateUserAccess(id, level) {
-    return axios.put('/updateAccess', {
+    return axios.put('/updateAccess', null, {
       params: {
         id,
         level
       }
     });
   }
-
 }
 
 export default new DataService();

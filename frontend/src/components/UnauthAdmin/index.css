@@ -1,0 +1,9 @@
+.UnauthAdmin {
+    margin: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+Label {
+    font-weight: bold;
+}

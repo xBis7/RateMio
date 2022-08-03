@@ -40,10 +40,10 @@ public class MainController {
       List<User> activeUserList = userService.getActiveUserList();
       User activeUser = activeUserList.get(activeUserList.size()-1);
 
-      authToken = new AuthToken(activeUser.getUsername(),
+      authToken = new AuthToken(activeUser.getUserId(), activeUser.getUsername(),
           activeUser.getEmail(), activeUser.getAccessLevel());
     } else {
-      authToken = new AuthToken(null, null, 0);
+      authToken = new AuthToken(0, null, null, 0);
     }
 
     return authToken;

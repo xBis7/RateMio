@@ -6,7 +6,6 @@ import com.xbis.models.User;
 import com.xbis.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,8 +26,9 @@ public class AdminController {
   @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllUsers() throws IOException {
-    List <User> userList = userService.getAllUsers();
+  public String getAllUsers(@RequestParam("id") long currentUserId)
+      throws IOException {
+    List <User> userList = userService.getAllUsers(currentUserId);
     ObjectMapper mapper = new ObjectMapper();
 
     String list = mapper.writeValueAsString(userList);
@@ -46,8 +45,11 @@ public class AdminController {
     return confToken;
   }
 
-  @RequestMapping(value = "/updateAccess", method = RequestMethod.PUT)
-  public ConfToken updateAccess(@RequestParam("id") long id, @RequestParam("level") int level) {
+  @RequestMapping(value = "/updateAccess", method = RequestMethod.PUT,
+      produces = {"application/json"})
+  @ResponseBody
+  public ConfToken updateAccess(@RequestParam("id") long id,
+                                @RequestParam("level") int level) {
     ConfToken confToken = new ConfToken();
     User user = userService.getUser(id);
     userService.updateAccessLevel(user, level);

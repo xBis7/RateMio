@@ -10,7 +10,7 @@ export default function Login() {
 
   const [password, setPassword] = useState('');
 
-  const [auth, setAuth] = useState(false);
+  const [authUser, setAuthUser] = useState({});
 
   const [errMessage, setErrMessage] = useState('');
 
@@ -29,16 +29,14 @@ export default function Login() {
           window.location.href = '/login';
         } else {
           alert('Successful user authentication!');
+          setAuthUser(JSON.stringify(response.data));
+//          alert(authUser.userId);
+          localStorage.setItem('authUser', JSON.stringify(response.data));
+          localStorage.setItem('auth', true);
           window.location.href = '/dashboard';
         }
       }).catch(err => {
-        if (!err.response) {
-          setErrMessage('No Server Response!');
-        } else if (err.response.status === 404) {
-          setErrMessage('User authentication failed!');
-        } else {
-          setErrMessage('Error: ' + err.response.data);
-        }
+        setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
       })
   }

@@ -17,8 +17,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public List<User> getAllUsers(){
-    return userDAO.getAllUsers();
+  public List<User> getAllUsers(long currentUserId){
+    return userDAO.getAllUsers(currentUserId);
   }
 
   @Override

@@ -1,5 +1,6 @@
 import './App.css';
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route } from "react-router-dom";
 
 import Login from './components/Login';
@@ -8,11 +9,30 @@ import NavigationBar from './components/NavigationBar';
 import Home from './components/Home';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
+import UnauthAdmin from './components/UnauthAdmin';
 import Dashboard from './components/Dashboard';
 import About from './components/About';
 
 
 function App() {
+
+  const [auth, setAuth] = useState(false);
+  const [access, setAccess] = useState(3);
+
+  useEffect(() => {
+    //get if authenticated
+    const authenticated = localStorage.getItem('auth');
+    setAuth(authenticated);
+
+    //get user
+    const authUser = localStorage.getItem('authUser');
+    const user = JSON.parse(authUser);
+    if (user) {
+      setAccess(user.accessLevel);
+    }
+    
+  }, []);
+
   return (
     <div className="App">
       <NavigationBar/>
@@ -22,8 +42,8 @@ function App() {
         <Route exact path='/home' element={<Home />}/>
         <Route path='/login' exact element={<Login />}/>
         <Route path='/register' exact element={<Register />}/>
-        <Route path='/admindashboard' exact element={<AdminDashboard />}/>
-        <Route path='/dashboard' exact element={<Dashboard />}/>       
+        <Route path='/admindashboard' exact element={(auth && access === 1) ? <AdminDashboard /> : <UnauthAdmin />}/>
+        <Route path='/dashboard' exact element={auth ? <Dashboard /> : <Login />}/>       
         <Route path='/about' exact element={<About />}/>       
       </Routes>
       <br/><br/>
