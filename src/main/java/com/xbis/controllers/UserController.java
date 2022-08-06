@@ -38,7 +38,6 @@ public class UserController {
   @ResponseBody
   public ConfToken newAccessRequest(@RequestParam("id") long id,
                                     @RequestParam("reqType") String type) {
-    System.out.println(id + ", " + type);
     Request request = new Request();
     ConfToken confToken = new ConfToken(false);
     User user = userService.getUser(id);

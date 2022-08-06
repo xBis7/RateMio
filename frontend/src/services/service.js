@@ -15,6 +15,15 @@ class DataService {
     });
   }
 
+  newActivity(ownerid, name) {
+    return axios.post('/newActivity', null, {
+      params: {
+        ownerid,
+        name
+      }
+    });
+  }
+
   login(user) {
     return axios.post('/userAuth', user);
   }

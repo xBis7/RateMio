@@ -1,6 +1,8 @@
 package com.xbis.models;
 
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "activities")
@@ -24,6 +26,8 @@ public class Activity {
   @Column(name = "teamnum")
   private int teamNum;
 
+  @OneToMany(mappedBy = "activity", cascade = CascadeType.MERGE)
+  private List<ActivityMember> memberList;
 
   public Activity() {
     super();
