@@ -8,7 +8,10 @@ export default function AdminDashboard() {
 
   const [users, setUsers] = useState('');
 
-  const [authUser, setAuthUser] = useState();
+  const [requests, setRequests] = useState('');
+  const [tmpId, setTmpId] = useState('');
+
+  const [authUser, setAuthUser] = useState({});
 
   const [errMessage, setErrMessage] = useState('');
 
@@ -18,6 +21,7 @@ export default function AdminDashboard() {
     if (user) {
       setAuthUser(JSON.stringify(user));
       getAllUsers(user.userId);
+      getAllRequests();
     }
   }, []);
 
@@ -26,6 +30,17 @@ export default function AdminDashboard() {
     DataService.getAllUsers(currId)
       .then(response => {
         setUsers(response.data);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response);
+        alert(errMessage);
+      })
+  }
+
+  const getAllRequests = async () => {
+    
+    DataService.getAllRequests()
+      .then(response => {
+        setRequests(response.data);
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response);
         alert(errMessage);
@@ -45,6 +60,29 @@ export default function AdminDashboard() {
         setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
       })
+  }
+
+  const deleteRequest = async (id) => {
+    DataService.deleteRequest(id)
+      .then(response => {
+        if(JSON.stringify(response.data.success) === 'true') {
+          alert('Request dismissed!');
+        } else {
+          alert('Failed to delete request!');
+        }
+        window.location.href = '/admindashboard';
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
+  }
+
+  const deleteRequestBasedOnUserId = async (userid) => {
+    Object.values(requests).forEach(function(item) {
+      if (item.userid === userid) {
+        deleteRequest(item.requestid);
+      }
+    });
   }
 
   const updateAccess = async (id, level) => {
@@ -68,6 +106,7 @@ export default function AdminDashboard() {
 
   return (
     <div className='AdminDashboard'>
+      <h3>User Control Panel</h3>
       <Table striped>
       <tbody>
         <tr>
@@ -100,7 +139,10 @@ export default function AdminDashboard() {
                   </Button>
                 }
                 {item[3] === 3 &&
-                  <Button variant='info' onClick={() => updateAccess(parseFloat(item[0]), 2)}>
+                  <Button variant='info' onClick={() => {
+                                                updateAccess(parseFloat(item[0]), 2);
+                                                deleteRequestBasedOnUserId(parseFloat(item[0]));
+                                                }}>
                     Super
                   </Button>
                 }            
@@ -110,6 +152,33 @@ export default function AdminDashboard() {
             </td>
             <td>
               <Button variant='secondary'>Reviews</Button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+      </Table>
+
+      <br/>
+      <br/>
+
+      <h3>Pending Requests</h3>
+      <Table striped>
+      <tbody>
+        <tr>
+          <th>Request Id</th>
+          <th>User Id</th>
+          <th>Type</th>
+          <th>Delete Request</th>
+        </tr>
+        {Object.values(requests).map((item) => (
+          <tr>
+            <td>{item.requestid}</td>
+            <td>{item.userid}</td>
+            <td>{item.type}</td>
+            <td>
+              <Button variant="danger" onClick={() => deleteRequest(parseFloat(item.requestid))}>
+                Delete
+              </Button>
             </td>
           </tr>
         ))}

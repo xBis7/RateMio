@@ -6,6 +6,9 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -31,6 +34,15 @@ public class User {
   @Column(name = "accesslevel")
   private int accessLevel;
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+  private List<Request> requestList;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+  private List<Activity> activityList;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+  private List<Review> reviewList;
+
   public User() {
     super();
   }
@@ -46,12 +58,36 @@ public class User {
     this.accessLevel = 3;           //all users will get access level = 3
   }
 
-  public long getUserId() {
+  public long getUserid() {
     return userid;
   }
 
-  public void setUserId(long userid) {
+  public void setUserid(long userid) {
     this.userid = userid;
+  }
+
+  public List<Request> getRequestList() {
+    return requestList;
+  }
+
+  public void setRequestList(List<Request> requestList) {
+    this.requestList = requestList;
+  }
+
+  public List<Activity> getActivityList() {
+    return activityList;
+  }
+
+  public void setActivityList(List<Activity> activityList) {
+    this.activityList = activityList;
+  }
+
+  public List<Review> getReviewList() {
+    return reviewList;
+  }
+
+  public void setReviewList(List<Review> reviewList) {
+    this.reviewList = reviewList;
   }
 
   public String getUsername() {

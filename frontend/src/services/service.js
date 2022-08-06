@@ -6,6 +6,15 @@ class DataService {
     return axios.post('/newUser', user);
   }
 
+  newAccessRequest(id, reqType) {
+    return axios.post('/newAccessRequest', null, {
+      params: {
+        id,
+        reqType
+      }
+    });
+  }
+
   login(user) {
     return axios.post('/userAuth', user);
   }
@@ -26,8 +35,20 @@ class DataService {
     });
   } 
 
+  getAllRequests() {
+    return axios.get('/getAllRequests');
+  } 
+
   deleteUser(id) {
     return axios.delete('/deleteUser', {
+      params: {
+        id
+      }
+    });
+  }
+
+  deleteRequest(id) {
+    return axios.delete('/deleteRequest', {
       params: {
         id
       }

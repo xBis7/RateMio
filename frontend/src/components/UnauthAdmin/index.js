@@ -23,12 +23,16 @@ export default function UnAuthAdmin() {
       <section>
         <h1>Unauthorized access</h1>
         <br/>
-        <p>You don't have admin access, please logout and login with an admin account to access this page.</p>
+        <p>You don't have admin access, please login with an admin account to access this page.</p>
         <br/>
         <br/>
-        <h3>Info: </h3>
-        {access === 2 && <p>User {username} has super user access</p>}
-        {access === 3 && <p>User {username} has basic access</p>}
+        {username.length > 0 &&
+          <div>
+          <h3>Info: </h3>
+          {access === 2 && <p>User {username} has super user access</p>}
+          {access === 3 && <p>User {username} has basic access</p>}
+          </div>  
+        }
       </section>
     </div>
   );

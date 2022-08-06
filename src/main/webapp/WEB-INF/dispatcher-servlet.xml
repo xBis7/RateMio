@@ -47,6 +47,8 @@
                 <value>com.xbis.models.Activity</value>
                 <value>com.xbis.models.Review</value>
                 <value>com.xbis.models.User</value>
+                <value>com.xbis.models.Request</value>
+                <value>com.xbis.models.ActivityMember</value>
             </list>
         </property>
         <property name="hibernateProperties">

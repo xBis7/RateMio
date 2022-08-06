@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,11 +20,6 @@ public class MainController {
 
   @Autowired
   UserService userService;
-
-  @RequestMapping(value = {"", "/", "/home"}, method = RequestMethod.GET)
-  public String index(){
-    return "index";
-  }
 
   @RequestMapping(value= "/userAuth", method = RequestMethod.POST,
       consumes = {"application/json"},
@@ -40,21 +34,13 @@ public class MainController {
       List<User> activeUserList = userService.getActiveUserList();
       User activeUser = activeUserList.get(activeUserList.size()-1);
 
-      authToken = new AuthToken(activeUser.getUserId(), activeUser.getUsername(),
+      authToken = new AuthToken(activeUser.getUserid(), activeUser.getUsername(),
           activeUser.getEmail(), activeUser.getAccessLevel());
     } else {
       authToken = new AuthToken(0, null, null, 0);
     }
 
     return authToken;
-  }
-
-  @RequestMapping(value = "/getUser", method = RequestMethod.GET,
-      produces = {"application/json"})
-  @ResponseBody
-  public User getUser(@RequestParam("id") long id) {
-    User user = userService.getUser(id);
-    return user;
   }
 
   @RequestMapping(value = "/newUser", method = RequestMethod.POST,
@@ -66,6 +52,11 @@ public class MainController {
     return user;
   }
 
+  /**
+   * Redundant
+   * Keep it just for userLogout() call.
+   * @return a redirect
+   */
   @RequestMapping(value="/logout", method = RequestMethod.GET)
   public String logout() {
     userService.userLogout();

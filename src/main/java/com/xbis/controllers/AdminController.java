@@ -2,7 +2,10 @@ package com.xbis.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xbis.models.ConfToken;
+import com.xbis.models.Request;
+import com.xbis.models.ResponseRequest;
 import com.xbis.models.User;
+import com.xbis.services.RequestService;
 import com.xbis.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ public class AdminController {
   @Autowired
   UserService userService;
 
+  @Autowired
+  RequestService requestService;
+
   @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
@@ -36,12 +42,33 @@ public class AdminController {
     return list;
   }
 
+  @RequestMapping(value = "/getAllRequests", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getAllRequests() throws IOException {
+    List <ResponseRequest> requestList = requestService.getAllRequests();
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(requestList);
+
+    return list;
+  }
+
   @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE,
       produces = {"application/json"})
   @ResponseBody
   public ConfToken deleteUser(@RequestParam("id") long id) {
-    ConfToken confToken = new ConfToken();
-    confToken.setSuccess(userService.deleteUser(id));
+    boolean success = userService.deleteUser(id);
+    ConfToken confToken = new ConfToken(success);
+    return confToken;
+  }
+
+  @RequestMapping(value = "/deleteRequest", method = RequestMethod.DELETE,
+      produces = {"application/json"})
+  @ResponseBody
+  public ConfToken deleteRequest(@RequestParam("id") long id) {
+    boolean success = requestService.deleteRequest(id);
+    ConfToken confToken = new ConfToken(success);
     return confToken;
   }
 
@@ -50,7 +77,7 @@ public class AdminController {
   @ResponseBody
   public ConfToken updateAccess(@RequestParam("id") long id,
                                 @RequestParam("level") int level) {
-    ConfToken confToken = new ConfToken();
+    ConfToken confToken = new ConfToken(false);
     User user = userService.getUser(id);
     userService.updateAccessLevel(user, level);
     confToken.setSuccess(true);

@@ -1,5 +1,10 @@
 package com.xbis.models;
 
+/**
+ * Class for returning an authentication token.
+ * Returning the info for the authenticated user.
+ * No password (hash or salt).
+ */
 public class AuthToken {
 
   private long userid;

@@ -1,24 +1,42 @@
 import './index.css'
 import DataService from '../../services/service';
 import React from 'react';
-import { useState } from "react";
-import { Form, Button } from 'react-bootstrap';
+import { useState, useEffect } from "react";
+import { Button } from 'react-bootstrap';
 
 export default function Dashboard() {
 
+  const [authUser, setAuthUser] = useState({});
+
   const [username, setUsername] = useState('');
 
-  const [id, setId] = useState('');
-
+  const [id, setId] = useState();
+  const [access, setAccess] = useState(3);
   const [errMessage, setErrMessage] = useState('');
 
-  const getUserWithId = async (event) => {
-    event.preventDefault();
+  useEffect(() => {
+    const loggedUser = localStorage.getItem('authUser');
+    const user = JSON.parse(loggedUser);
+    if (user) {
+      setAuthUser(JSON.stringify(user));
+      setId(user.userId);
+      setUsername(user.username);
+      setAccess(user.accessLevel);
+    }
+  }, []);
 
-    DataService.getUser(id)
+  const newAccessReq = (event) => {
+    event.preventDefault();
+    
+    const reqType = 'access';
+
+    DataService.newAccessRequest(id, reqType)
       .then(response => {
-        setUsername(JSON.stringify(response.data.username));
-        //window.location.href = '/dashboard';
+        if(JSON.stringify(response.data.success) === 'true') {
+          alert('Access request sent successfuly!');
+        } else {
+          alert('Access request failed!');
+        }      
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
@@ -28,28 +46,12 @@ export default function Dashboard() {
   return (
     <div className='Dashboard'>
       <section>
-        <h1>Get User</h1>
-        <br/>
-        <Form onSubmit={getUserWithId}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Id</Form.Label>
-            <Form.Control
-              autoComplete="off"
-              onChange={(e) => setId(e.target.value)}
-              value={id}
-              required
-              type="number" 
-              placeholder="Enter Id" 
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Get User
-          </Button>
-        </Form>
-        <br/>
-        <p>
-          user: {username}
-        </p>
+        {access === 3 &&
+          <div>
+            <p>Request team leader privileges</p>
+            <Button onClick={newAccessReq}>Access Request</Button>
+          </div>  
+        }
       </section>
     </div>
   );

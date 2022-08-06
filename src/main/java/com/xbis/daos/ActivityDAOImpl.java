@@ -83,7 +83,7 @@ public class ActivityDAOImpl implements ActivityDAO {
   public boolean deleteActivity(long activityId) {
     Session session = this.sessionFactory.getCurrentSession();
     Object persistentIns = session.load(Activity.class, activityId);
-    if(persistentIns != null){
+    if (persistentIns != null){
       session.delete(persistentIns);
       return true;
     }

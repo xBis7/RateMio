@@ -1,13 +1,6 @@
 package com.xbis.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "activities")
@@ -18,8 +11,8 @@ public class Activity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long activityId;
 
-  @ManyToOne
-  @JoinColumn(name= "ownerid", nullable = false)
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "ownerid", nullable = false)
   private User user;
 
   @Column(name = "activityname", nullable = false, unique = true)

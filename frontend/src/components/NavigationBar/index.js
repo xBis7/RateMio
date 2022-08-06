@@ -41,14 +41,12 @@ export default function NavigationBar() {
               style={{ maxHeight: '100px' }}
               navbarScroll
             >
-              <Nav.Link href="/home">Home</Nav.Link> 
               {access === 1 && 
                 <Nav.Link href="/admindashboard">Admin Dashboard</Nav.Link>  
               }
               {(access === 2 || access === 3) && 
                 <Nav.Link href="/dashboard">Dashboard</Nav.Link>  
               }
-              <Nav.Link href="/about">About</Nav.Link>
             </Nav>
             {username.length === 0 &&
               <Form className="d-flex">

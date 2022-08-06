@@ -9,6 +9,8 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  //check if confPassword === password
   const [confPassword, setConfPassword] = useState('');
 
   const [errMessage, setErrMessage] = useState('');
