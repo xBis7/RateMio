@@ -19,7 +19,7 @@ export default function UnAuthAdmin() {
 
 
   return (
-    <div className='Login'>
+    <div className='UnauthAdmin'>
       <section>
         <h1>Unauthorized access</h1>
         <br/>

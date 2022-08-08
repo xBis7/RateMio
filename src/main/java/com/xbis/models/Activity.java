@@ -1,7 +1,15 @@
 package com.xbis.models;
 
-import javax.persistence.*;
-import java.util.LinkedList;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
 import java.util.List;
 
 @Entity
@@ -11,20 +19,20 @@ public class Activity {
   @Id
   @Column(name = "activityid")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long activityId;
+  private long activityid;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "ownerid", nullable = false)
   private User user;
 
   @Column(name = "activityname", nullable = false, unique = true)
-  private String name;
+  private String activityname;
 
   @Column(name = "membernum")
-  private int memberNum;
+  private int membernum;
 
   @Column(name = "teamnum")
-  private int teamNum;
+  private int teamnum;
 
   @OneToMany(mappedBy = "activity", cascade = CascadeType.MERGE)
   private List<ActivityMember> memberList;
@@ -33,21 +41,21 @@ public class Activity {
     super();
   }
 
-  public Activity(long activityId, User user, String name, int memberNum, int teamNum) {
+  public Activity(long activityid, User user, String activityname, int membernum, int teamnum) {
     super();
-    this.activityId = activityId;
+    this.activityid = activityid;
     this.user = user;
-    this.name = name;
-    this.memberNum = memberNum;
-    this.teamNum = teamNum;
+    this.activityname = activityname;
+    this.membernum = membernum;
+    this.teamnum = teamnum;
   }
 
   public long getActivityId() {
-    return activityId;
+    return activityid;
   }
 
   public void setActivityId(long activityId) {
-    this.activityId = activityId;
+    this.activityid = activityid;
   }
 
   public User getUser() {
@@ -58,27 +66,27 @@ public class Activity {
     this.user = user;
   }
 
-  public String getName() {
-    return name;
+  public String getActivityName() {
+    return activityname;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setActivityName(String activityname) {
+    this.activityname = activityname;
   }
 
   public int getMemberNum() {
-    return memberNum;
+    return membernum;
   }
 
-  public void setMemberNum(int memberNum) {
-    this.memberNum = memberNum;
+  public void setMemberNum(int membernum) {
+    this.membernum = membernum;
   }
 
   public int getTeamNum() {
-    return teamNum;
+    return teamnum;
   }
 
-  public void setTeamNum(int teamNum) {
-    this.teamNum = teamNum;
+  public void setTeamNum(int teamnum) {
+    this.teamnum = teamnum;
   }
 }

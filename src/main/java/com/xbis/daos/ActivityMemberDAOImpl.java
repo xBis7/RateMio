@@ -1,9 +1,6 @@
 package com.xbis.daos;
 
-import com.xbis.models.Activity;
-import com.xbis.models.ActivityMember;
-import com.xbis.models.Request;
-import com.xbis.models.User;
+import com.xbis.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -51,7 +49,7 @@ public class ActivityMemberDAOImpl implements ActivityMemberDAO{
   public List<Activity> getAllMemberActivities(long userid) {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT am.Activity FROM ActivityMember am WHERE am.userid = :userid";
+    String sqlQuery = "SELECT am.activity.activityname FROM ActivityMember am WHERE am.user.userid = :userid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("userid", userid);
     List <Activity> activityList = query.getResultList();

@@ -1,5 +1,7 @@
 package com.xbis.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xbis.models.ConfToken;
 import com.xbis.models.Request;
 import com.xbis.models.User;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -30,6 +34,19 @@ public class UserController {
   public User getUser(@RequestParam("id") long id) {
     User user = userService.getUser(id);
     return user;
+  }
+
+  @RequestMapping(value = "/getAllUsersNonAdmin", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getAllUsersNonAdmin(@RequestParam("id") long currentUserId)
+      throws JsonProcessingException {
+    List<User> userList = userService.getAllUsersNonAdmin(currentUserId);
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(userList);
+
+    return list;
   }
 
   @RequestMapping(value = "/newAccessRequest", method = RequestMethod.POST,

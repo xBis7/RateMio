@@ -17,7 +17,7 @@ public class Request {
   @Id
   @Column(name = "requestid")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long requestId;
+  private long requestid;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "userid")
@@ -30,19 +30,19 @@ public class Request {
     super();
   }
 
-  public Request(long requestId, User user, String reqtype) {
+  public Request(long requestid, User user, String reqtype) {
     super();
-    this.requestId = requestId;
+    this.requestid = requestid;
     this.user = user;
     this.reqtype = reqtype;
   }
 
   public long getRequestId() {
-    return requestId;
+    return requestid;
   }
 
-  public void setRequestId(long requestId) {
-    this.requestId = requestId;
+  public void setRequestId(long requestid) {
+    this.requestid = requestid;
   }
 
   public User getUser() {

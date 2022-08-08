@@ -1,9 +1,9 @@
 package com.xbis.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xbis.models.ConfToken;
 import com.xbis.models.Request;
-import com.xbis.models.ResponseRequest;
 import com.xbis.models.User;
 import com.xbis.services.RequestService;
 import com.xbis.services.UserService;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,7 +32,7 @@ public class AdminController {
       produces = {"application/json"})
   @ResponseBody
   public String getAllUsers(@RequestParam("id") long currentUserId)
-      throws IOException {
+      throws JsonProcessingException {
     List <User> userList = userService.getAllUsers(currentUserId);
     ObjectMapper mapper = new ObjectMapper();
 
@@ -45,8 +44,8 @@ public class AdminController {
   @RequestMapping(value = "/getAllRequests", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllRequests() throws IOException {
-    List <ResponseRequest> requestList = requestService.getAllRequests();
+  public String getAllRequests() throws JsonProcessingException {
+    List <Request> requestList = requestService.getAllRequests();
     ObjectMapper mapper = new ObjectMapper();
 
     String list = mapper.writeValueAsString(requestList);

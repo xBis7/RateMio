@@ -44,9 +44,33 @@ class DataService {
     });
   } 
 
+  getAllUsersNonAdmin(id) {
+    return axios.get('/getAllUsersNonAdmin', {
+      params: {
+        id
+      }
+    });
+  } 
+
   getAllRequests() {
     return axios.get('/getAllRequests');
   } 
+
+  getAllUserActivities(userid) {
+    return axios.get('/getAllUserActivities', {
+      params: {
+        userid
+      }
+    });
+  }
+
+  getActivity(activityid) {
+    return axios.get('/getActivity', {
+      params: {
+        activityid
+      }
+    });
+  }
 
   deleteUser(id) {
     return axios.delete('/deleteUser', {

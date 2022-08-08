@@ -1,7 +1,6 @@
 package com.xbis.daos;
 
 import com.xbis.models.Request;
-import com.xbis.models.ResponseRequest;
 import com.xbis.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,31 +26,21 @@ public class RequestDAOImpl implements RequestDAO {
   }
 
   @Override
-  public List<ResponseRequest> getAllRequests() {
+  public List<Request> getAllRequests() {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT r FROM Request r";
+    String sqlQuery = "SELECT r.requestid, r.user.userid, r.reqtype FROM Request r";
     Query query = session.createQuery(sqlQuery);
     List <Request> requestList = query.getResultList();
 
-    // this is like a hashmap and we need just the values
-    //[{"requestid":<?>,"userid":<?>,"type":<?>}]
-    List <ResponseRequest> responseRequestList = new LinkedList<>();
-
-    for (Request request: requestList) {
-      ResponseRequest responseRequest =
-          new ResponseRequest(request.getRequestId(),
-                              request.getUser().getUserid(),
-                              request.getReqType());
-      responseRequestList.add(responseRequest);
-    }
-    return responseRequestList;
+    return requestList;
   }
 
   @Override
   public List<Request> getAllUserRequests(long userId) {
     Session session = this.sessionFactory.getCurrentSession();
-    String sqlQuery = "SELECT r FROM Request r WHERE r.userid = :userid";
+    String sqlQuery = "SELECT r.requestid, r.user.userid, r.reqtype FROM Request r " +
+        "WHERE r.user.userid = :userid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("userid", userId);
     List<Request> list = query.getResultList();

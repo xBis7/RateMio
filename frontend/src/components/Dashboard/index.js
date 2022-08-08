@@ -2,13 +2,17 @@ import './index.css'
 import DataService from '../../services/service';
 import React from 'react';
 import { useState, useEffect } from "react";
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Card, Table, Accordion } from 'react-bootstrap';
 
 export default function Dashboard() {
 
   const [authUser, setAuthUser] = useState({});
 
+  const [activities, setActivities] = useState('');
+
   const [username, setUsername] = useState('');
+
+  const [activityOwner, setActivityOwner] = useState({});
 
   const [activityName, setActivityName] = useState('');
 
@@ -24,8 +28,31 @@ export default function Dashboard() {
       setId(user.userId);
       setUsername(user.username);
       setAccess(user.accessLevel);
+      getAllUserActivities(user.userId);
+
     }
   }, []);
+
+  const getAllUserActivities = (currId) => {
+    
+    DataService.getAllUserActivities(currId)
+      .then(response => {
+        setActivities(response.data);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
+  }
+
+  const getActivityOwner = (userid) => {
+    DataService.getUser(userid)
+      .then(response => {
+        setActivityOwner(response.data);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
+  } 
 
   const newAccessReq = (event) => {
     event.preventDefault();
@@ -45,8 +72,7 @@ export default function Dashboard() {
       })
   }
 
-  const newActivity = (event) => {
-    event.preventDefault();
+  const newActivity = () => {
 
     DataService.newActivity(id, activityName)
       .then(response => {
@@ -72,8 +98,8 @@ export default function Dashboard() {
         }
 
         {access === 2 &&
-          <div>
-          <Form onSubmit={newActivity}>
+          <div className='newActivity'>
+          <Form onSubmit={newActivity} className='newActivityForm'>
             <h3>Create a new Activity</h3>
             <br/>
             <br/>
@@ -94,7 +120,35 @@ export default function Dashboard() {
           </Form>
           </div>  
         }
+        
+        <br/>
+        <br/>
 
+        {Object.values(activities).map((item) => (
+          <Accordion defaultActiveKey="0" flush className='accordion'>
+            <Accordion.Item>
+              <Accordion.Header>Activity: {item[2]}</Accordion.Header>
+              <Accordion.Body>
+                  <Table striped>
+                    <tbody>
+                      <tr>
+                        <th>Number of members</th>
+                        <th>Number of teams</th>
+                      </tr>
+                        <tr>
+                          <td>{item[3]}</td>
+                          <td>{item[4]}</td>
+                        </tr>
+                    </tbody>
+                  </Table>
+                  <Button variant="primary" href={`activity/${item[0]}`}>Open Activity</Button>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        ))}
+
+
+        
       </section>
     </div>
   );

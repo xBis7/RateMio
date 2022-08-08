@@ -1,13 +1,12 @@
 package com.xbis.services;
 
 import com.xbis.models.Request;
-import com.xbis.models.ResponseRequest;
 
 import java.util.List;
 
 public interface RequestService {
 
-  public List<ResponseRequest> getAllRequests();
+  public List<Request> getAllRequests();
 
   public List<Request> getAllUserRequests(long userId);
 

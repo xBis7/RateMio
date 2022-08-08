@@ -33,7 +33,11 @@ export default function Login() {
 //          alert(authUser.userId);
           localStorage.setItem('authUser', JSON.stringify(response.data));
           localStorage.setItem('auth', true);
-          window.location.href = '/dashboard';
+          if (JSON.stringify(response.data.accessLevel) === "1") {
+            window.location.href = '/admindashboard';
+          } else {
+            window.location.href = '/dashboard';
+          }
         }
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response.data);

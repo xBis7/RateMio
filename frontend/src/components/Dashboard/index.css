@@ -1,3 +1,15 @@
 .Dashboard {
     margin: 100px;
 }
+
+.newActivity {
+    border-bottom: 3px solid black;
+}
+
+.newActivityForm {
+    padding: 20px 20px 50px 20px;
+}
+
+.accordion {
+    border-bottom: 3px solid rgb(185, 185, 185);
+}

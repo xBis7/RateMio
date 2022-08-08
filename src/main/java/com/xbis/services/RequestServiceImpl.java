@@ -2,7 +2,6 @@ package com.xbis.services;
 
 import com.xbis.daos.RequestDAO;
 import com.xbis.models.Request;
-import com.xbis.models.ResponseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class RequestServiceImpl implements RequestService {
 
   @Override
   @Transactional
-  public List<ResponseRequest> getAllRequests() {
+  public List<Request> getAllRequests() {
     return requestDAO.getAllRequests();
   }
 

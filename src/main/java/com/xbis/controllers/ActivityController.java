@@ -1,11 +1,23 @@
 package com.xbis.controllers;
 
-import com.xbis.models.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xbis.models.Activity;
+import com.xbis.models.User;
+import com.xbis.models.ActivityMember;
+import com.xbis.models.ConfToken;
 import com.xbis.services.ActivityMemberService;
 import com.xbis.services.ActivityService;
 import com.xbis.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -30,7 +42,7 @@ public class ActivityController {
     Activity activity = new Activity();
     User user = userService.getUser(id);
     activity.setUser(user);
-    activity.setName(name);
+    activity.setActivityName(name);
     activity.setMemberNum(1);
     activity.setTeamNum(0);
 
@@ -45,5 +57,27 @@ public class ActivityController {
 
     confToken.setSuccess(true);
     return confToken;
+  }
+
+  @RequestMapping(value = "/getActivity", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public Activity getActivity(@RequestParam("activityid") long id) {
+    Activity activity = activityService.getActivity(id);
+
+    return activity;
+  }
+
+  @RequestMapping(value = "/getAllUserActivities", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getAllUserActivities(@RequestParam("userid") long id)
+      throws JsonProcessingException {
+    List<Activity> activityList = activityService.getAllUserActivities(id);
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(activityList);
+
+    return list;
   }
 }

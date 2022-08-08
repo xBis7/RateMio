@@ -11,8 +11,7 @@ import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
 import UnauthAdmin from './components/UnauthAdmin';
 import Dashboard from './components/Dashboard';
-import About from './components/About';
-
+import Activity from './components/Activity';
 
 function App() {
 
@@ -43,8 +42,8 @@ function App() {
         <Route path='/login' exact element={<Login />}/>
         <Route path='/register' exact element={<Register />}/>
         <Route path='/admindashboard' exact element={(auth && access === 1) ? <AdminDashboard /> : <UnauthAdmin />}/>
-        <Route path='/dashboard' exact element={auth ? <Dashboard /> : <Login />}/>       
-        <Route path='/about' exact element={<About />}/>       
+        <Route path='/dashboard' exact element={auth ? <Dashboard /> : <Login />}/>  
+        <Route path='/activity/:activityid' exact element={auth ? <Activity /> : <Login />}/>       
       </Routes>
       <br/><br/>
       <Footer/> 

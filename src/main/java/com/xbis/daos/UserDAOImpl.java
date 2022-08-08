@@ -40,6 +40,19 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
+  public List<User> getAllUsersNonAdmin(long currentUserId) {
+    Session session = this.sessionFactory.getCurrentSession();
+
+    String sqlQuery = "SELECT userid, username, email, accessLevel FROM User " +
+        "WHERE userid != :currId AND username != 'admin'";
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("currId", currentUserId);
+    List <User> userList = query.getResultList();
+
+    return userList;
+  }
+
+  @Override
   public User getUser(long userId) {
     Session session = this.sessionFactory.getCurrentSession();
     User user = (User) session.get(User.class, userId);
