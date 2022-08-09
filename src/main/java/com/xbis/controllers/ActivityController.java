@@ -59,13 +59,20 @@ public class ActivityController {
     return confToken;
   }
 
+  /**
+   * @return a list with only one element
+   */
   @RequestMapping(value = "/getActivity", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public Activity getActivity(@RequestParam("activityid") long id) {
-    Activity activity = activityService.getActivity(id);
+  public String getActivity(@RequestParam("activityid") long id)
+      throws JsonProcessingException {
+    List<Activity> activityList = activityService.getActivity(id);
+    ObjectMapper mapper = new ObjectMapper();
 
-    return activity;
+    String list = mapper.writeValueAsString(activityList);
+
+    return list;
   }
 
   @RequestMapping(value = "/getAllUserActivities", method = RequestMethod.GET,
@@ -77,6 +84,20 @@ public class ActivityController {
     ObjectMapper mapper = new ObjectMapper();
 
     String list = mapper.writeValueAsString(activityList);
+
+    return list;
+  }
+
+  @RequestMapping(value = "/getAllActivityUsers", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getAllActivityUsers(@RequestParam("ownerid") long ownerid,
+                                    @RequestParam("activityid") long activityid)
+      throws JsonProcessingException {
+    List<User> userList = activityService.getAllActivityUsers(ownerid, activityid);
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(userList);
 
     return list;
   }

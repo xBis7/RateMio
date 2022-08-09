@@ -72,6 +72,15 @@ class DataService {
     });
   }
 
+  getAllActivityUsers(ownerid, activityid) {
+    return axios.get('/getAllActivityUsers', {
+      params: {
+        ownerid,
+        activityid
+      }
+    });
+  }
+
   deleteUser(id) {
     return axios.delete('/deleteUser', {
       params: {

@@ -1,20 +1,14 @@
 package com.xbis.daos;
 
 import com.xbis.models.Activity;
-import com.xbis.models.ResponseActivity;
 import com.xbis.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 public class ActivityDAOImpl implements ActivityDAO {
@@ -45,7 +39,8 @@ public class ActivityDAOImpl implements ActivityDAO {
   public List<Activity> getAllUserActivities(long ownerId) {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT a.activityid, a.user.userid, a.activityname, a.membernum, a.teamnum FROM Activity a WHERE a.user.userid = :ownerid";
+    String sqlQuery = "SELECT a.activityid, a.user.userid, a.activityname, a.membernum, a.teamnum " +
+        "FROM Activity a WHERE a.user.userid = :ownerid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("ownerid", ownerId);
 
@@ -54,18 +49,24 @@ public class ActivityDAOImpl implements ActivityDAO {
     return activityList;
   }
 
+  /**
+   * We want all the member, so we get all the users, except the owner.
+   */
   @Override
-  public List<User> getAllActivityUsers(long activityId) {
+  public List<User> getAllActivityUsers(long ownerid, long activityid) {
     Session session = this.sessionFactory.getCurrentSession();
-    String sqlQuery = "SELECT username FROM User, ActivityMember where ActivityMember.activityid = :activityId AND ActivityMember.userid = User.userid";
+    String sqlQuery = "SELECT u.userid, u.username FROM User u, ActivityMember am WHERE " +
+        "am.activity.activityid = :activityId AND am.user.userid != :ownerId";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter("activityId", activityId);
+    query.setParameter("activityId", activityid);
+    query.setParameter("ownerId", ownerid);
     List<User> list = query.getResultList();
+
     return list;
   }
 
   @Override
-  public Activity getActivity(long activityId) {
+  public List<Activity> getActivity(long activityId) {
     Session session = this.sessionFactory.getCurrentSession();
     String sqlQuery = "SELECT a.activityid, a.user.userid, a.user.username, a.activityname, a.membernum, a.teamnum " +
         "FROM Activity a WHERE a.activityid = :activityid";
@@ -74,7 +75,7 @@ public class ActivityDAOImpl implements ActivityDAO {
 
     List<Activity> list = query.getResultList();
 
-    return list.get(0);
+    return list;
   }
 
   @Override

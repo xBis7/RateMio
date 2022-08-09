@@ -29,13 +29,13 @@ public class ActivityServiceImpl implements ActivityService {
 
   @Override
   @Transactional
-  public List<User> getAllActivityUsers(long activityId) {
-    return activityDAO.getAllActivityUsers(activityId);
+  public List<User> getAllActivityUsers(long ownerId, long activityId) {
+    return activityDAO.getAllActivityUsers(ownerId, activityId);
   }
 
   @Override
   @Transactional
-  public Activity getActivity(long activityId) {
+  public List<Activity> getActivity(long activityId) {
     return activityDAO.getActivity(activityId);
   }
 
