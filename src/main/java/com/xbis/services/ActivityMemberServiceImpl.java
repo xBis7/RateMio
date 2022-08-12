@@ -51,4 +51,10 @@ public class ActivityMemberServiceImpl implements ActivityMemberService {
   public boolean removeMember(long memberid) {
     return activityMemberDAO.removeMember(memberid);
   }
+
+  @Override
+  @Transactional
+  public boolean removeActivity(long activityid) {
+    return activityMemberDAO.removeActivity(activityid);
+  }
 }

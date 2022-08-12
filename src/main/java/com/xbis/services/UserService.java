@@ -9,8 +9,6 @@ public interface UserService {
 
   public List<User> getAllUsers(long currentUserId);
 
-  public List<User> getAllUsersNonAdmin(long currentUserId);
-
   public User getUser(long userId);
 
   public User addUser(User user);

@@ -1,6 +1,7 @@
 package com.xbis.daos;
 
 import com.xbis.models.Activity;
+import com.xbis.models.Request;
 import com.xbis.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -50,7 +51,7 @@ public class ActivityDAOImpl implements ActivityDAO {
   }
 
   /**
-   * We want all the member, so we get all the users, except the owner.
+   * We want all the members, so we get all the users, except the owner.
    */
   @Override
   public List<User> getAllActivityUsers(long ownerid, long activityid) {
@@ -66,6 +67,20 @@ public class ActivityDAOImpl implements ActivityDAO {
   }
 
   @Override
+  public List<User> getAllUsersNonAdminNonMember(long currentUserId, long activityId) {
+    Session session = this.sessionFactory.getCurrentSession();
+
+    String sqlQuery = "SELECT u.userid, u.username, u.email, u.accessLevel FROM User u, ActivityMember am " +
+        "WHERE u.userid != :currId AND u.username != 'admin' AND (u.userid = am.userid AND am.activityid != :activityId)";
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("currId", currentUserId);
+    query.setParameter("activityId", activityId);
+    List <User> userList = query.getResultList();
+
+    return userList;
+  }
+
+  @Override
   public List<Activity> getActivity(long activityId) {
     Session session = this.sessionFactory.getCurrentSession();
     String sqlQuery = "SELECT a.activityid, a.user.userid, a.user.username, a.activityname, a.membernum, a.teamnum " +
@@ -76,6 +91,13 @@ public class ActivityDAOImpl implements ActivityDAO {
     List<Activity> list = query.getResultList();
 
     return list;
+  }
+
+  @Override
+  public Activity getActivityObject(long activityId) {
+    Session session = this.sessionFactory.getCurrentSession();
+    Activity activity = (Activity) session.get(Activity.class, activityId);
+    return activity;
   }
 
   @Override

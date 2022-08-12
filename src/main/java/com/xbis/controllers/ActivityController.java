@@ -101,4 +101,55 @@ public class ActivityController {
 
     return list;
   }
+
+  @RequestMapping(value = "/deleteActivity", method = RequestMethod.DELETE,
+      produces = {"application/json"})
+  @ResponseBody
+  public ConfToken deleteActivity(@RequestParam("activityid") long activityid) {
+    ConfToken confToken = new ConfToken(false);
+
+    activityService.deleteActivity(activityid);
+
+    confToken.setSuccess(true);
+    return confToken;
+  }
+
+  @RequestMapping(value = "/addActivityMember", method = RequestMethod.POST,
+      consumes = {"application/json"},
+      produces = {"application/json"})
+  @ResponseBody
+  public ConfToken addActivityMember(@RequestParam("userid") long userid,
+                                     @RequestParam("activityid") long activityid) {
+    ConfToken confToken = new ConfToken(false);
+
+    User user = userService.getUser(userid);
+    Activity activity = activityService.getActivityObject(activityid);
+
+    ActivityMember activityMember = new ActivityMember();
+    activityMember.setActivity(activity);
+    activityMember.setUser(user);
+
+    activityMemberService.addActivityMember(activityMember);
+
+    //update activity member num
+    activityService.updateMemberNum(activity, (activity.getMemberNum() + 1));
+
+    confToken.setSuccess(true);
+    return confToken;
+  }
+
+  @RequestMapping(value = "/getAllUsersNonAdminNonMember", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getAllUsersNonAdminNonMember(@RequestParam("userid") long currentUserId,
+                                             @RequestParam("activityid") long activityId)
+      throws JsonProcessingException {
+    List<User> userList = activityService.getAllUsersNonAdminNonMember(currentUserId, activityId);
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(userList);
+
+    return list;
+  }
+
 }

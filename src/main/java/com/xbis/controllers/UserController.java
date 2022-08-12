@@ -36,19 +36,6 @@ public class UserController {
     return user;
   }
 
-  @RequestMapping(value = "/getAllUsersNonAdmin", method = RequestMethod.GET,
-      produces = {"application/json"})
-  @ResponseBody
-  public String getAllUsersNonAdmin(@RequestParam("id") long currentUserId)
-      throws JsonProcessingException {
-    List<User> userList = userService.getAllUsersNonAdmin(currentUserId);
-    ObjectMapper mapper = new ObjectMapper();
-
-    String list = mapper.writeValueAsString(userList);
-
-    return list;
-  }
-
   @RequestMapping(value = "/newAccessRequest", method = RequestMethod.POST,
       consumes = {"application/json"},
       produces = {"application/json"})

@@ -86,5 +86,16 @@ public class ActivityMemberDAOImpl implements ActivityMemberDAO{
     }
     return false;
   }
+
+  @Override
+  public boolean removeActivity(long activityid) {
+    Session session = this.sessionFactory.getCurrentSession();
+    Object persistentIns = session.load(Request.class, activityid);
+    if (persistentIns != null) {
+      session.delete(persistentIns);
+      return true;
+    }
+    return false;
+  }
 }
 

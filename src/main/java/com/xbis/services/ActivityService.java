@@ -13,7 +13,11 @@ public interface ActivityService {
 
   public List<User> getAllActivityUsers(long ownerId, long activityId);
 
+  public List<User> getAllUsersNonAdminNonMember(long currentUserId, long activityId);
+
   public List<Activity> getActivity(long activityId);
+
+  public Activity getActivityObject(long activityId);
 
   public Activity addActivity(Activity activity);
 

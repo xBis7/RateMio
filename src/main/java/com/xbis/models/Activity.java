@@ -34,7 +34,7 @@ public class Activity {
   @Column(name = "teamnum")
   private int teamnum;
 
-  @OneToMany(mappedBy = "activity", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "activity", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<ActivityMember> memberList;
 
   public Activity() {

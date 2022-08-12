@@ -26,14 +26,14 @@ export default function Activity() {
     const loggedUser = localStorage.getItem('authUser');
     const user = JSON.parse(loggedUser);
     if (user) {
-      getAllUsersNonAdmin(user.userId);
+      getAllUsersNonAdminNonMember(user.userId);
     }
     getActivity();
   }, []);
 
-  const getAllUsersNonAdmin = async (currId) => {
+  const getAllUsersNonAdminNonMember = async (currId) => {
     
-    DataService.getAllUsersNonAdmin(currId)
+    DataService.getAllUsersNonAdminNonMember(currId)
       .then(response => {
         setUsers(response.data);
       }).catch(err => {
@@ -76,8 +76,21 @@ export default function Activity() {
       })
   }
 
-  const addUserToActivity = async () => {
-    alert('made it');
+  const addActivityMember = async (userid) => {
+
+    const id = {activityid};
+
+    DataService.addActivityMember(userid, id.activityid)
+      .then(response => {
+        if(JSON.stringify(response.data.success) === 'true') {
+          alert('User added successfuly!');
+        } else {
+          alert('User addition failed!');
+        } 
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
   }
 
   return (
@@ -102,34 +115,32 @@ export default function Activity() {
           }
 
           {memberNum > 1 && 
-            <Table striped>
-              <tbody>
-                <tr>
-                  <th>Id</th>
-                  <th>Username</th>
-                  <th>Remove User</th>
-                  <th>Add to team</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-                {Object.values(members).map((item) => (
+            <div>
+              <Table striped>
+                <tbody>
                   <tr>
-                    <td>{item[0]}</td>
-                    <td>{item[1]}</td>
-                    <td>
-                      <Button variant='warning' onClick={() => addUserToActivity()}>
-                        Remove
-                      </Button>
-                    </td>
-                    <td>
-                      <Button variant='info' onClick={() => addUserToActivity()}>
-                        Team
-                      </Button>
-                    </td>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Remove User</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                  {Object.values(members).map((item) => (
+                    <tr>
+                      <td>{item[0]}</td>
+                      <td>{item[1]}</td>
+                      <td>
+                        <Button variant='warning' onClick={() => addActivityMember()}>
+                          Remove
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+
+              <Button variant='info' onClick={() => addActivityMember()}>
+                Start Activity              
+              </Button>
+            </div>
           }
         
         </Card.Body>
@@ -140,7 +151,7 @@ export default function Activity() {
       <h3>Add users to this activity</h3>
 
       {users.length === 0 &&
-        <p>There are no registered users.</p>
+        <p>There are no available users.</p>
       }
 
 
@@ -151,15 +162,13 @@ export default function Activity() {
             <th>Id</th>
             <th>Username</th>
             <th>Add User</th>
-            <th></th>
-            <th></th>
           </tr>
           {Object.values(users).map((item) => (
             <tr>
               <td>{item[0]}</td>
               <td>{item[1]}</td>
               <td>
-                <Button variant='info' onClick={() => addUserToActivity()}>
+                <Button variant='info' onClick={() => addActivityMember(parseFloat(item[0]))}>
                   Add
                 </Button>
               </td>

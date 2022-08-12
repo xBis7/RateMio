@@ -24,6 +24,15 @@ class DataService {
     });
   }
 
+  addActivityMember(userid, activityid) {
+    return axios.post('/addActivityMember', null, {
+      params: {
+        userid,
+        activityid
+      }
+    });
+  }
+
   login(user) {
     return axios.post('/userAuth', user);
   }
@@ -44,8 +53,8 @@ class DataService {
     });
   } 
 
-  getAllUsersNonAdmin(id) {
-    return axios.get('/getAllUsersNonAdmin', {
+  getAllUsersNonAdminNonMember(id) {
+    return axios.get('/getAllUsersNonAdminNonMember', {
       params: {
         id
       }
@@ -93,6 +102,14 @@ class DataService {
     return axios.delete('/deleteRequest', {
       params: {
         id
+      }
+    });
+  }
+
+  deleteActivity(activityid) {
+    return axios.delete('/deleteActivity', {
+      params: {
+        activityid
       }
     });
   }

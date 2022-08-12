@@ -23,12 +23,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public List<User> getAllUsersNonAdmin(long currentUserId) {
-    return userDAO.getAllUsersNonAdmin(currentUserId);
-  }
-
-  @Override
-  @Transactional
   public User getUser(long userId) {
     return userDAO.getUser(userId);
   }

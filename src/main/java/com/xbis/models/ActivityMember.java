@@ -23,7 +23,7 @@ public class ActivityMember {
   @JoinColumn(name = "userid")
   private User user;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   @JoinColumn(name = "activityid")
   private Activity activity;
 

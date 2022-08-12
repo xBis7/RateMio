@@ -140,8 +140,6 @@ export default function AdminDashboard() {
             <th>Update Access to</th>
             <th>Preview Activities</th>
             <th>Preview Reviews</th>
-            <th></th>
-            <th></th>
           </tr>
           {Object.values(users).map((item) => (
             <tr>

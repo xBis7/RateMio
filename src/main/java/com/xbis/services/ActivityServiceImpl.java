@@ -35,8 +35,20 @@ public class ActivityServiceImpl implements ActivityService {
 
   @Override
   @Transactional
+  public List<User> getAllUsersNonAdminNonMember(long currentUserId, long activityId) {
+    return activityDAO.getAllUsersNonAdminNonMember(currentUserId, activityId);
+  }
+
+  @Override
+  @Transactional
   public List<Activity> getActivity(long activityId) {
     return activityDAO.getActivity(activityId);
+  }
+
+  @Override
+  @Transactional
+  public Activity getActivityObject(long activityId) {
+    return activityDAO.getActivityObject(activityId);
   }
 
   @Override

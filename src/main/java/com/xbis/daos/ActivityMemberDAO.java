@@ -19,4 +19,6 @@ public interface ActivityMemberDAO {
   public ActivityMember addActivityMember(ActivityMember activityMember);
 
   public boolean removeMember(long memberid);
+
+  public boolean removeActivity(long activityid);
 }

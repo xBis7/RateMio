@@ -78,8 +78,25 @@ export default function Dashboard() {
       .then(response => {
         if(JSON.stringify(response.data.success) === 'true') {
           alert('Activity created successfuly!');
+          window.location.href = '/dashboard';
         } else {
           alert('Activity creation failed!');
+        } 
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
+  }
+
+  const deleteActivity = (activityid) => {
+
+    DataService.deleteActivity(activityid)
+      .then(response => {
+        if(JSON.stringify(response.data.success) === 'true') {
+          alert('Activity deleted successfuly!');
+          window.location.href = '/dashboard';
+        } else {
+          alert('Activity deletion failed!');
         } 
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response.data);
@@ -93,7 +110,7 @@ export default function Dashboard() {
         {access === 3 &&
           <div>
             <p>Request team leader privileges</p>
-            <Button onClick={newAccessReq}>Access Request</Button>
+            <Button onClick={newAccessReq}>Request Access</Button>
           </div>  
         }
 
@@ -141,7 +158,8 @@ export default function Dashboard() {
                         </tr>
                     </tbody>
                   </Table>
-                  <Button variant="primary" href={`activity/${item[0]}`}>Open Activity</Button>
+                  <Button className='openActButton' variant="primary" href={`activity/${item[0]}`}>Open Activity</Button>
+                  <Button className='deleteActButton' variant="danger" onClick={() => deleteActivity(parseFloat(item[0]))}>Delete Activity</Button>
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
