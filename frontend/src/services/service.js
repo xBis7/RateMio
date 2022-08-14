@@ -53,10 +53,10 @@ class DataService {
     });
   } 
 
-  getAllUsersNonAdminNonMember(id) {
+  getAllUsersNonAdminNonMember(activityid) {
     return axios.get('/getAllUsersNonAdminNonMember', {
       params: {
-        id
+        activityid
       }
     });
   } 
@@ -109,6 +109,15 @@ class DataService {
   deleteActivity(activityid) {
     return axios.delete('/deleteActivity', {
       params: {
+        activityid
+      }
+    });
+  }
+
+  removeActivityMember(userid, activityid) {
+    return axios.delete('/removeActivityMember', {
+      params: {
+        userid, 
         activityid
       }
     });

@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.naming.event.ObjectChangeListener;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -32,6 +33,19 @@ public class ActivityMemberDAOImpl implements ActivityMemberDAO{
     ActivityMember activityMember =
         (ActivityMember) session.get(ActivityMember.class, memberid);
     return activityMember;
+  }
+
+  @Override
+  public List<ActivityMember> getActivityMemberEntry(long userid, long activityid) {
+    Session session = this.sessionFactory.getCurrentSession();
+    String sqlQuery = "SELECT am.memberid, am.user.userid, am.activity.activityid " +
+        "FROM ActivityMember am WHERE am.user.userid= :userid AND am.activity.activityid= :activityid";
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("userid", userid);
+    query.setParameter("activityid", activityid);
+    List<ActivityMember> resultList = query.getResultList();
+
+    return resultList;
   }
 
   @Override
@@ -82,6 +96,22 @@ public class ActivityMemberDAOImpl implements ActivityMemberDAO{
     Object persistentIns = session.load(Request.class, memberid);
     if (persistentIns != null) {
       session.delete(persistentIns);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean removeMember(long userid, long activityid) {
+    Session session = this.sessionFactory.getCurrentSession();
+    String sqlQuery = "DELETE FROM ActivityMember am WHERE am.user.userid= :userid AND am.activity.activityid= :activityid";
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("userid", userid);
+    query.setParameter("activityid", activityid);
+
+    int result = query.executeUpdate();
+
+    if (result>0) {
       return true;
     }
     return false;

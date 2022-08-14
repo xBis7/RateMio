@@ -2,10 +2,7 @@ package com.xbis.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xbis.models.Activity;
-import com.xbis.models.User;
-import com.xbis.models.ActivityMember;
-import com.xbis.models.ConfToken;
+import com.xbis.models.*;
 import com.xbis.services.ActivityMemberService;
 import com.xbis.services.ActivityService;
 import com.xbis.services.UserService;
@@ -138,13 +135,28 @@ public class ActivityController {
     return confToken;
   }
 
+  @RequestMapping(value = "/removeActivityMember", method = RequestMethod.DELETE,
+      produces = {"application/json"})
+  @ResponseBody
+  public ConfToken removeActivityMember(@RequestParam("userid") long userid,
+                                        @RequestParam("activityid") long activityid) {
+    ConfToken confToken = new ConfToken(false);
+
+    Activity activity = activityService.getActivityObject(activityid);
+    confToken.setSuccess(activityMemberService.removeMember(userid, activityid));
+
+    //update activity member num
+    activityService.updateMemberNum(activity, (activity.getMemberNum() - 1));
+
+    return confToken;
+  }
+
   @RequestMapping(value = "/getAllUsersNonAdminNonMember", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllUsersNonAdminNonMember(@RequestParam("userid") long currentUserId,
-                                             @RequestParam("activityid") long activityId)
+  public String getAllUsersNonAdminNonMember(@RequestParam("activityid") long activityId)
       throws JsonProcessingException {
-    List<User> userList = activityService.getAllUsersNonAdminNonMember(currentUserId, activityId);
+    List<User> userList = activityService.getAllUsersNonAdminNonMember(activityId);
     ObjectMapper mapper = new ObjectMapper();
 
     String list = mapper.writeValueAsString(userList);

@@ -24,6 +24,12 @@ public class ActivityMemberServiceImpl implements ActivityMemberService {
 
   @Override
   @Transactional
+  public List<ActivityMember> getActivityMemberEntry(long userid, long activityid) {
+    return activityMemberDAO.getActivityMemberEntry(userid, activityid);
+  }
+
+  @Override
+  @Transactional
   public List<ActivityMember> getAllActivityMemberEntries() {
     return activityMemberDAO.getAllActivityMemberEntries();
   }
@@ -50,6 +56,12 @@ public class ActivityMemberServiceImpl implements ActivityMemberService {
   @Transactional
   public boolean removeMember(long memberid) {
     return activityMemberDAO.removeMember(memberid);
+  }
+
+  @Override
+  @Transactional
+  public boolean removeMember(long userid, long activityid) {
+    return activityMemberDAO.removeMember(userid, activityid);
   }
 
   @Override

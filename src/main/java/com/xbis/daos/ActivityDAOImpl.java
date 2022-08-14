@@ -57,23 +57,22 @@ public class ActivityDAOImpl implements ActivityDAO {
   public List<User> getAllActivityUsers(long ownerid, long activityid) {
     Session session = this.sessionFactory.getCurrentSession();
     String sqlQuery = "SELECT u.userid, u.username FROM User u, ActivityMember am WHERE " +
-        "am.activity.activityid = :activityId AND am.user.userid != :ownerId";
+        "u.userid=am.user.userid AND am.user.userid != :ownerId AND am.activity.activityid = :activityId";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter("activityId", activityid);
     query.setParameter("ownerId", ownerid);
+    query.setParameter("activityId", activityid);
     List<User> list = query.getResultList();
 
     return list;
   }
 
   @Override
-  public List<User> getAllUsersNonAdminNonMember(long currentUserId, long activityId) {
+  public List<User> getAllUsersNonAdminNonMember(long activityId) {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT u.userid, u.username, u.email, u.accessLevel FROM User u, ActivityMember am " +
-        "WHERE u.userid != :currId AND u.username != 'admin' AND (u.userid = am.userid AND am.activityid != :activityId)";
+    String sqlQuery = "SELECT u.userid, u.username, u.email, u.accessLevel FROM User u WHERE u.username != 'admin' " +
+        "AND u.userid NOT IN (SELECT am.user.userid FROM ActivityMember am WHERE am.activity.activityid= :activityId)";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter("currId", currentUserId);
     query.setParameter("activityId", activityId);
     List <User> userList = query.getResultList();
 

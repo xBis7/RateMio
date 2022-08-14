@@ -10,6 +10,8 @@ public interface ActivityMemberDAO {
 
   public ActivityMember getActivityMemberEntry(long memberid);
 
+  public List<ActivityMember> getActivityMemberEntry(long userid, long activityid);
+
   public List<ActivityMember> getAllActivityMemberEntries();
 
   public List<Activity> getAllMemberActivities(long userid);
@@ -19,6 +21,8 @@ public interface ActivityMemberDAO {
   public ActivityMember addActivityMember(ActivityMember activityMember);
 
   public boolean removeMember(long memberid);
+
+  public boolean removeMember(long userid, long activityid);
 
   public boolean removeActivity(long activityid);
 }

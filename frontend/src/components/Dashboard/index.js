@@ -77,7 +77,6 @@ export default function Dashboard() {
     DataService.newActivity(id, activityName)
       .then(response => {
         if(JSON.stringify(response.data.success) === 'true') {
-          alert('Activity created successfuly!');
           window.location.href = '/dashboard';
         } else {
           alert('Activity creation failed!');

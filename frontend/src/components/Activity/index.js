@@ -3,7 +3,7 @@ import React from 'react';
 import DataService from '../../services/service';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Table, Card } from 'react-bootstrap';
+import { Button, Table, Card, Tab, Row, Col, ListGroup, Form } from 'react-bootstrap';
 
 export default function Activity() {
 
@@ -19,21 +19,26 @@ export default function Activity() {
   const [memberNum, setMemberNum] = useState('');
   const [teamNum, setTeamNum] = useState('');
 
+  const [teams, setTeams] = useState();
+  const [teamName, setTeamName] = useState('');
+
+  const [displayTeamMaker, setDisplayTeamMaker] = useState(false);
+
   const [errMessage, setErrMessage] = useState('');
   const { activityid } = useParams();
 
   useEffect(() => {
     const loggedUser = localStorage.getItem('authUser');
     const user = JSON.parse(loggedUser);
-    if (user) {
-      getAllUsersNonAdminNonMember(user.userId);
-    }
+    getAllUsersNonAdminNonMember();
     getActivity();
   }, []);
 
-  const getAllUsersNonAdminNonMember = async (currId) => {
+  const getAllUsersNonAdminNonMember = async () => {
     
-    DataService.getAllUsersNonAdminNonMember(currId)
+    const id = {activityid};
+
+    DataService.getAllUsersNonAdminNonMember(id.activityid)
       .then(response => {
         setUsers(response.data);
       }).catch(err => {
@@ -83,7 +88,7 @@ export default function Activity() {
     DataService.addActivityMember(userid, id.activityid)
       .then(response => {
         if(JSON.stringify(response.data.success) === 'true') {
-          alert('User added successfuly!');
+          window.location.reload();
         } else {
           alert('User addition failed!');
         } 
@@ -91,6 +96,35 @@ export default function Activity() {
         setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
       })
+  }
+
+  const checkForTeams = async () => {
+    if(members.length >= 4) {
+      setDisplayTeamMaker(true);
+    } else {
+      alert('Activity members must be at least 4 to create teams');
+    }
+  }
+
+  const removeActivityMember = async (userid) => {
+
+    const id = {activityid};
+
+    DataService.removeActivityMember(userid, id.activityid)
+    .then(response => {
+      if(JSON.stringify(response.data.success) === 'true') {
+        window.location.reload();
+      } else {
+        alert('Member remove failed!');
+      } 
+    }).catch(err => {
+      setErrMessage('Server Error: ' + err.response.data);
+      alert(errMessage);
+    })
+  }
+
+  const newTeam = () => {
+    
   }
 
   return (
@@ -105,7 +139,7 @@ export default function Activity() {
         <Card.Body>
           <Card.Title>Name: {activityName}</Card.Title>
           <Card.Text>
-            Number of members: {memberNum}
+            Number of members: {memberNum-1}
             <br/>
             Number of teams: {teamNum}
           </Card.Text>
@@ -128,7 +162,7 @@ export default function Activity() {
                       <td>{item[0]}</td>
                       <td>{item[1]}</td>
                       <td>
-                        <Button variant='warning' onClick={() => addActivityMember()}>
+                        <Button variant='warning' onClick={() => removeActivityMember(parseFloat(item[0]))}>
                           Remove
                         </Button>
                       </td>
@@ -137,9 +171,61 @@ export default function Activity() {
                 </tbody>
               </Table>
 
-              <Button variant='info' onClick={() => addActivityMember()}>
-                Start Activity              
+              <Button variant='info' onClick={checkForTeams}>
+                Create teams
               </Button>
+            </div>
+          } 
+
+          {displayTeamMaker === true && 
+            <div>
+              <br/>
+              <p>Halo let's create some teams</p>
+              <br/>
+              <Form onSubmit={newTeam} className='newTeamForm'>
+                <h3>Create a new team</h3>
+                <br/>
+                <br/>
+                <Form.Group className="mb-3">
+                  <Form.Label>Team name</Form.Label>
+                  <Form.Control
+                    autoComplete="off"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                    required  
+                    type="text" 
+                    placeholder="Enter team name" 
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit">
+                  New Team
+                </Button>
+              </Form>
+
+              <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+              <Row>
+                <Col sm={4}>
+                  <ListGroup>
+                    <ListGroup.Item action href="#link1">
+                      Link 1
+                    </ListGroup.Item>
+                    <ListGroup.Item action href="#link2">
+                      Link 2
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Col>
+                <Col sm={8}>
+                  <Tab.Content>
+                    <Tab.Pane eventKey="#link1">
+                    <p>Sonnet1</p>
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="#link2">
+                    <p>Sonnet2</p>
+                    </Tab.Pane>
+                  </Tab.Content>
+                </Col>
+              </Row>
+            </Tab.Container>
             </div>
           }
         

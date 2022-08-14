@@ -17,7 +17,7 @@ public class ActivityMember {
   @Id
   @Column(name="memberid")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long memberId;
+  private long memberid;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "userid")
@@ -31,19 +31,19 @@ public class ActivityMember {
     super();
   }
 
-  public ActivityMember(long memberId, User user, Activity activity) {
+  public ActivityMember(long memberid, User user, Activity activity) {
     super();
-    this.memberId = memberId;
+    this.memberid = memberid;
     this.user = user;
     this.activity = activity;
   }
 
   public long getMemberId() {
-    return memberId;
+    return memberid;
   }
 
-  public void setMemberId(long memberId) {
-    this.memberId = memberId;
+  public void setMemberId(long memberid) {
+    this.memberid = memberid;
   }
 
   public void setUser(User user) {
