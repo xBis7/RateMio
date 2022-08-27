@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xbis.models.*;
 import com.xbis.services.ActivityMemberService;
 import com.xbis.services.ActivityService;
+import com.xbis.services.PendingReviewService;
 import com.xbis.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +29,9 @@ public class ActivityController {
 
   @Autowired
   ActivityMemberService activityMemberService;
+
+  @Autowired
+  PendingReviewService pendingReviewService;
 
   @RequestMapping(value = "/newActivity", method = RequestMethod.POST,
       consumes = {"application/json"},
@@ -164,4 +168,27 @@ public class ActivityController {
     return list;
   }
 
+  @RequestMapping(value = "/newPendingReviewRequest", method = RequestMethod.POST,
+      consumes = {"application/json"},
+      produces = {"application/json"})
+  @ResponseBody
+  public ConfToken newPendingReviewRequest(@RequestParam("reviewerid") long reviewerid,
+                                           @RequestParam("reviewedid") long reviewedid,
+                                           @RequestParam("activityid") long activityid) {
+    ConfToken confToken = new ConfToken(false);
+
+    PendingReview pendingReview = new PendingReview();
+    User reviewer = userService.getUser(reviewerid);
+    User reviewed = userService.getUser(reviewedid);
+    Activity activity = activityService.getActivityObject(activityid);
+
+    pendingReview.setReviewer(reviewer);
+    pendingReview.setReviewed(reviewed);
+    pendingReview.setActivity(activity);
+
+    pendingReviewService.addPendingReview(pendingReview);
+
+    confToken.setSuccess(true);
+    return confToken;
+  }
 }

@@ -44,9 +44,11 @@ public class UserController {
                                     @RequestParam("reqType") String type) {
     Request request = new Request();
     ConfToken confToken = new ConfToken(false);
-    User user = userService.getUser(id);
-    request.setUser(user);
-    request.setReqType(type);
+    User sender = userService.getUser(id);
+    User receiver = userService.getAdmin();
+    request.setReceiver(receiver);
+    request.setSender(sender);
+    request.setReqtype(type);
     requestService.addRequest(request);
     confToken.setSuccess(true);
     return confToken;

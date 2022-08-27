@@ -11,6 +11,8 @@ public interface UserDAO {
 
   public User getUser(long userId);
 
+  public User getAdmin();
+
   public User addUser(User user);
 
   public boolean checkUser(String username, String password);

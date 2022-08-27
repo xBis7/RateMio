@@ -140,6 +140,9 @@ export default function Dashboard() {
         <br/>
         <br/>
 
+        <h3>Activities owned by {username}</h3>
+        <br/>
+
         {Object.values(activities).map((item) => (
           <Accordion defaultActiveKey="0" flush className='accordion'>
             <Accordion.Item>
@@ -152,7 +155,7 @@ export default function Dashboard() {
                         <th>Number of teams</th>
                       </tr>
                         <tr>
-                          <td>{item[3]}</td>
+                          <td>{item[3]-1}</td>
                           <td>{item[4]}</td>
                         </tr>
                     </tbody>

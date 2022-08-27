@@ -37,6 +37,12 @@ public class Activity {
   @OneToMany(mappedBy = "activity", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<ActivityMember> memberList;
 
+  @OneToMany(mappedBy = "activity", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+  private List<Review> reviewList;
+
+  @OneToMany(mappedBy = "activity", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+  private List<PendingReview> pendingReviewList;
+
   public Activity() {
     super();
   }

@@ -8,7 +8,9 @@ public interface RequestService {
 
   public List<Request> getAllRequests();
 
-  public List<Request> getAllUserRequests(long userId);
+  public List<Request> getAllAccessRequests();
+
+  public List<Request> getAllSenderRequests(long senderId);
 
   public Request getRequest(long requestId);
 

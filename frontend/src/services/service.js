@@ -15,6 +15,16 @@ class DataService {
     });
   }
 
+  newPendingReviewRequest(reviewerid, reviewedid, activityid) {
+    return axios.post('/newPendingReviewRequest', null, {
+      params: {
+        reviewerid,
+        reviewedid,
+        activityid
+      }
+    });
+  }
+
   newActivity(ownerid, name) {
     return axios.post('/newActivity', null, {
       params: {
@@ -61,8 +71,8 @@ class DataService {
     });
   } 
 
-  getAllRequests() {
-    return axios.get('/getAllRequests');
+  getAllAccessRequests() {
+    return axios.get('/getAllAccessRequests');
   } 
 
   getAllUserActivities(userid) {

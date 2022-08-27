@@ -27,6 +27,10 @@ public class Review {
   @JoinColumn(name = "userid")
   private User user;
 
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "activityid")
+  private Activity activity;
+
   @Column(name = "communication")
   private int communication;
 
@@ -46,12 +50,17 @@ public class Review {
     super();
   }
 
-  public Review(long reviewId, User reviewer, User user, int communication, int efficiency, int openess, int balance) {
+  public Review(long reviewId, User reviewer,
+                User user, Activity activity,
+                int communication, int productivity,
+                int efficiency, int openess, int balance) {
     super();
     this.reviewId = reviewId;
     this.reviewer = reviewer;
     this.user = user;
+    this.activity = activity;
     this.communication = communication;
+    this.productivity = productivity;
     this.efficiency = efficiency;
     this.openess = openess;
     this.balance = balance;
@@ -79,6 +88,14 @@ public class Review {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public Activity getActivity() {
+    return activity;
+  }
+
+  public void setActivity(Activity activity) {
+    this.activity = activity;
   }
 
   public int getCommunication() {

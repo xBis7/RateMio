@@ -41,11 +41,11 @@ public class AdminController {
     return list;
   }
 
-  @RequestMapping(value = "/getAllRequests", method = RequestMethod.GET,
+  @RequestMapping(value = "/getAllAccessRequests", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllRequests() throws JsonProcessingException {
-    List <Request> requestList = requestService.getAllRequests();
+  public String getAllAccessRequests() throws JsonProcessingException {
+    List <Request> requestList = requestService.getAllAccessRequests();
     ObjectMapper mapper = new ObjectMapper();
 
     String list = mapper.writeValueAsString(requestList);

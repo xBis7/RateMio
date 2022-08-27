@@ -4,6 +4,11 @@
     justify-content: center;
 }
 
+.createTeams {
+    margin-top: 25px;
+    border-top: 3px solid black;
+}
+
 Label {
     font-weight: bold;
 }

@@ -1,14 +1,12 @@
 package com.xbis.daos;
 
 import com.xbis.models.Request;
-import com.xbis.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -29,7 +27,7 @@ public class RequestDAOImpl implements RequestDAO {
   public List<Request> getAllRequests() {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT r.requestid, r.user.userid, r.reqtype FROM Request r";
+    String sqlQuery = "SELECT r.requestid, r.sender.userid, r.reqtype FROM Request r";
     Query query = session.createQuery(sqlQuery);
     List <Request> requestList = query.getResultList();
 
@@ -37,12 +35,24 @@ public class RequestDAOImpl implements RequestDAO {
   }
 
   @Override
-  public List<Request> getAllUserRequests(long userId) {
+  public List<Request> getAllAccessRequests() {
     Session session = this.sessionFactory.getCurrentSession();
-    String sqlQuery = "SELECT r.requestid, r.user.userid, r.reqtype FROM Request r " +
-        "WHERE r.user.userid = :userid";
+
+    String sqlQuery = "SELECT r.requestid, r.sender.userid, r.reqtype" +
+        " FROM Request r WHERE r.reqtype = 'access'";
     Query query = session.createQuery(sqlQuery);
-    query.setParameter("userid", userId);
+    List <Request> requestList = query.getResultList();
+
+    return requestList;
+  }
+
+  @Override
+  public List<Request> getAllSenderRequests(long senderId) {
+    Session session = this.sessionFactory.getCurrentSession();
+    String sqlQuery = "SELECT r.requestid, r.sender.userid, r.reqtype FROM Request r " +
+        "WHERE r.sender.userid = :senderid";
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("senderid", senderId);
     List<Request> list = query.getResultList();
     return list;
   }

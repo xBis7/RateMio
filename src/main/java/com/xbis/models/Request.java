@@ -20,8 +20,13 @@ public class Request {
   private long requestid;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "userid")
-  private User user;
+  @JoinColumn(name = "receiverid")
+  private User receiver;
+
+
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "senderid")
+  private User sender;
 
   @Column(name = "reqtype", nullable = false)
   private String reqtype;
@@ -30,34 +35,43 @@ public class Request {
     super();
   }
 
-  public Request(long requestid, User user, String reqtype) {
+  public Request(long requestid, User receiver, User sender, String reqtype) {
     super();
     this.requestid = requestid;
-    this.user = user;
+    this.receiver = receiver;
+    this.sender = sender;
     this.reqtype = reqtype;
   }
 
-  public long getRequestId() {
+  public long getRequestid() {
     return requestid;
   }
 
-  public void setRequestId(long requestid) {
+  public void setRequestid(long requestid) {
     this.requestid = requestid;
   }
 
-  public User getUser() {
-    return user;
+  public User getReceiver() {
+    return receiver;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setReceiver(User receiver) {
+    this.receiver = receiver;
   }
 
-  public String getReqType() {
+  public User getSender() {
+    return sender;
+  }
+
+  public void setSender(User sender) {
+    this.sender = sender;
+  }
+
+  public String getReqtype() {
     return reqtype;
   }
 
-  public void setReqType(String reqtype) {
+  public void setReqtype(String reqtype) {
     this.reqtype = reqtype;
   }
 }

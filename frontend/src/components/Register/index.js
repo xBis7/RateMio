@@ -10,7 +10,6 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  //check if confPassword === password
   const [confPassword, setConfPassword] = useState('');
 
   const [errMessage, setErrMessage] = useState('');
@@ -18,29 +17,36 @@ export default function Register() {
   const newUser = async (event) => {
     event.preventDefault();    
     
-    const user = {
-      email: email,
-      username: username,
-      password: password
-      };
-
-    DataService.register(user)
-      .then(response => {
-        setUsername(JSON.stringify(response.data.username));
-        setEmail(JSON.stringify(response.data.email));
-        alert('Successful registration!');
-        window.location.href = '/login'; 
-      })
-      .catch(err => {
-        if (!err.response) {
-          setErrMessage('No Server Response!');
-        } else if (err.response.status === 409) {
-          setErrMessage('Username already taken!');
-        } else {
-          setErrMessage('Server Error: ' + err.response.data);
-        }
-        alert(errMessage);
-      }) 
+    if (password === confPassword) {
+      
+      const user = {
+        email: email,
+        username: username,
+        password: password
+        };
+  
+      DataService.register(user)
+        .then(response => {
+          setUsername(JSON.stringify(response.data.username));
+          setEmail(JSON.stringify(response.data.email));
+          alert('Successful registration!');
+          window.location.href = '/login'; 
+        })
+        .catch(err => {
+          if (!err.response) {
+            setErrMessage('No Server Response!');
+          } else if (err.response.status === 409) {
+            setErrMessage('Username already taken!');
+          } else {
+            setErrMessage('Server Error: ' + err.response.data);
+          }
+          alert(errMessage);
+        }) 
+    } else {
+      alert('Passwords must match, enter passwords again');
+      setPassword('');
+      setConfPassword('');
+    }
   }
 
   return (

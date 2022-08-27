@@ -4,10 +4,14 @@ import com.xbis.models.Activity;
 import com.xbis.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +47,23 @@ public class UserDAOImpl implements UserDAO {
   public User getUser(long userId) {
     Session session = this.sessionFactory.getCurrentSession();
     User user = (User) session.get(User.class, userId);
+    return user;
+  }
+
+  @Override
+  public User getAdmin() {
+    Session session = this.sessionFactory.getCurrentSession();
+    CriteriaBuilder builder = session.getCriteriaBuilder();
+    CriteriaQuery<User> criteria = builder.createQuery(User.class);
+    Root<User> root = criteria.from(User.class);
+    criteria.select(root).where(root.get("username").in("admin"));
+
+    Query<User> query = session.createQuery(criteria);
+
+    List<User> results = query.getResultList();
+
+    User user = (User) results.get(0);
+
     return user;
   }
 

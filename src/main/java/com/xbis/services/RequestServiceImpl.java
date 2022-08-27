@@ -22,8 +22,14 @@ public class RequestServiceImpl implements RequestService {
 
   @Override
   @Transactional
-  public List<Request> getAllUserRequests(long userId) {
-    return requestDAO.getAllUserRequests(userId);
+  public List<Request> getAllAccessRequests(){
+    return requestDAO.getAllAccessRequests();
+  }
+
+  @Override
+  @Transactional
+  public List<Request> getAllSenderRequests(long senderId) {
+    return requestDAO.getAllSenderRequests(senderId);
   }
 
   @Override

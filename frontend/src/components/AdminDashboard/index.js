@@ -22,7 +22,7 @@ export default function AdminDashboard() {
     if (user) {
       setAuthUser(JSON.stringify(user));
       getAllUsers(user.userId);
-      getAllRequests();
+      getAllAccessRequests();
     }
   }, []);
 
@@ -37,9 +37,9 @@ export default function AdminDashboard() {
       })
   }
 
-  const getAllRequests = async () => {
+  const getAllAccessRequests = async () => {
     
-    DataService.getAllRequests()
+    DataService.getAllAccessRequests()
       .then(response => {
         setRequests(response.data);
       }).catch(err => {
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
       <br/>
       <br/>
 
-      <h3>Pending Requests</h3>
+      <h3>Pending Access Requests</h3>
       
       {requests.length === 0 &&
         <p>There are no pending requests.</p>

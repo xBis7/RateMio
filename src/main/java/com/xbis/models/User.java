@@ -27,14 +27,23 @@ public class User {
   @Column(name = "accesslevel")
   private int accessLevel;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-  private List<Request> requestList;
+  @OneToMany(mappedBy = "receiver", cascade = CascadeType.MERGE)
+  private List<Request> reqReceiverList;
+
+  @OneToMany(mappedBy = "sender", cascade = CascadeType.MERGE)
+  private List<Request> reqSenderList;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
   private List<Activity> activityList;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
   private List<Review> reviewList;
+
+  @OneToMany(mappedBy = "reviewer", cascade = CascadeType.MERGE)
+  private List<PendingReview> pendReviewerList;
+
+  @OneToMany(mappedBy = "reviewed", cascade = CascadeType.MERGE)
+  private List<PendingReview> pendReviewedList;
 
   public User() {
     super();
@@ -59,12 +68,20 @@ public class User {
     this.userid = userid;
   }
 
-  public List<Request> getRequestList() {
-    return requestList;
+  public List<Request> getReqReceiverList() {
+    return reqReceiverList;
   }
 
-  public void setRequestList(List<Request> requestList) {
-    this.requestList = requestList;
+  public void setReqReceiverList(List<Request> reqReceiverList) {
+    this.reqReceiverList = reqReceiverList;
+  }
+
+  public List<Request> getReqSenderList() {
+    return reqSenderList;
+  }
+
+  public void setReqSenderList(List<Request> reqSenderList) {
+    this.reqSenderList = reqSenderList;
   }
 
   public List<Activity> getActivityList() {
@@ -81,6 +98,22 @@ public class User {
 
   public void setReviewList(List<Review> reviewList) {
     this.reviewList = reviewList;
+  }
+
+  public List<PendingReview> getPendReviewerList() {
+    return pendReviewerList;
+  }
+
+  public void setPendReviewerList(List<PendingReview> pendReviewerList) {
+    this.pendReviewerList = pendReviewerList;
+  }
+
+  public List<PendingReview> getPendReviewedList() {
+    return pendReviewedList;
+  }
+
+  public void setPendReviewedList(List<PendingReview> pendReviewedList) {
+    this.pendReviewedList = pendReviewedList;
   }
 
   public String getUsername() {
