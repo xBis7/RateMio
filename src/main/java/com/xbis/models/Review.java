@@ -24,8 +24,8 @@ public class Review {
   private User reviewer;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "userid")
-  private User user;
+  @JoinColumn(name = "reviewedid")
+  private User reviewed;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "activityid")
@@ -40,8 +40,8 @@ public class Review {
   @Column(name = "efficiency")
   private int efficiency;
 
-  @Column(name = "openess")
-  private int openess;
+  @Column(name = "openness")
+  private int openness;
 
   @Column(name = "balance")
   private int balance;
@@ -51,18 +51,18 @@ public class Review {
   }
 
   public Review(long reviewId, User reviewer,
-                User user, Activity activity,
+                User reviewed, Activity activity,
                 int communication, int productivity,
-                int efficiency, int openess, int balance) {
+                int efficiency, int openness, int balance) {
     super();
     this.reviewId = reviewId;
     this.reviewer = reviewer;
-    this.user = user;
+    this.reviewed = reviewed;
     this.activity = activity;
     this.communication = communication;
     this.productivity = productivity;
     this.efficiency = efficiency;
-    this.openess = openess;
+    this.openness = openness;
     this.balance = balance;
   }
 
@@ -82,12 +82,12 @@ public class Review {
     this.reviewer = reviewer;
   }
 
-  public User getUser() {
-    return user;
+  public User getReviewed() {
+    return reviewed;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setReviewed(User reviewed) {
+    this.reviewed = reviewed;
   }
 
   public Activity getActivity() {
@@ -122,12 +122,12 @@ public class Review {
     this.efficiency = efficiency;
   }
 
-  public int getOpeness() {
-    return openess;
+  public int getOpenness() {
+    return openness;
   }
 
-  public void setOpeness(int openess) {
-    this.openess = openess;
+  public void setOpenness(int openness) {
+    this.openness = openness;
   }
 
   public int getBalance() {

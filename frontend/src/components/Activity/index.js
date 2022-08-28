@@ -31,6 +31,9 @@ export default function Activity() {
     const user = JSON.parse(loggedUser);
     getAllUsersNonAdminNonMember();
     getActivity();
+    //get teams from local storage    
+    //const savedTeamMaker = localStorage.getItem('displayTeamMaker');
+    //const savedTeams = localStorage.getItem('teams');
   }, []);
 
   const getAllUsersNonAdminNonMember = async () => {
@@ -196,6 +199,8 @@ export default function Activity() {
 
     // store initial team
     setTeams(JSON.stringify([objects]));
+    //localStorage.setItem('displayTeamMaker', true);
+    //localStorage.setItem('teams', teams);
   }
 
   const reorder = (list, startIndex, endIndex) => {
@@ -224,6 +229,8 @@ export default function Activity() {
 
       // store reordered teams
       setTeams(JSON.stringify(newState));
+      //localStorage.setItem('displayTeamMaker', true);
+      //localStorage.setItem('teams', teams);
     } else {
       const r = move(state[sourceId], state[destinationId], source, destination);
       const newState = [...state];
@@ -234,6 +241,8 @@ export default function Activity() {
       
       // store teams
       setTeams(JSON.stringify(newState.filter(group => group.length)));
+      //localStorage.setItem('displayTeamMaker', true);
+      //localStorage.setItem('teams', teams);
     }
   }
 

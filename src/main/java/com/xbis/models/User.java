@@ -36,8 +36,11 @@ public class User {
   @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
   private List<Activity> activityList;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-  private List<Review> reviewList;
+  @OneToMany(mappedBy = "reviewer", cascade = CascadeType.MERGE)
+  private List<Review> reviewerList;
+
+  @OneToMany(mappedBy = "reviewed", cascade = CascadeType.MERGE)
+  private List<Review> reviewedList;
 
   @OneToMany(mappedBy = "reviewer", cascade = CascadeType.MERGE)
   private List<PendingReview> pendReviewerList;
@@ -92,12 +95,20 @@ public class User {
     this.activityList = activityList;
   }
 
-  public List<Review> getReviewList() {
-    return reviewList;
+  public List<Review> getReviewerList() {
+    return reviewerList;
   }
 
-  public void setReviewList(List<Review> reviewList) {
-    this.reviewList = reviewList;
+  public void setReviewerList(List<Review> reviewerList) {
+    this.reviewerList = reviewerList;
+  }
+
+  public List<Review> getReviewedList() {
+    return reviewedList;
+  }
+
+  public void setReviewedList(List<Review> reviewedList) {
+    this.reviewedList = reviewedList;
   }
 
   public List<PendingReview> getPendReviewerList() {

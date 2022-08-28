@@ -52,8 +52,9 @@ public class PendingReviewDAOImpl implements PendingReviewDAO {
   public List<PendingReview> getAllReviewerReviews(long reviewerId) {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT pr.reviewid, pr.reviewer.userid, pr.reviewed.userid, pr.activity.activityid" +
-        " FROM PendingReview pr WHERE pr.receiver.userid = :reviewerid";
+    String sqlQuery = "SELECT pr.reviewid, pr.reviewed.userid, pr.reviewed.username, " +
+        "pr.activity.activityname, pr.activity.activityid FROM PendingReview pr " +
+        "WHERE pr.reviewer.userid = :reviewerid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("reviewerid", reviewerId);
     List <PendingReview> pendingReviewList = query.getResultList();

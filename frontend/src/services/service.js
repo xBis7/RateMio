@@ -6,6 +6,23 @@ class DataService {
     return axios.post('/newUser', user);
   }
 
+  newReview(reviewerId, reviewedId, activityId, 
+            communication, productivity, efficiency,
+            openness, balance) {
+    return axios.post('/newReview', null, {
+      params: {
+        reviewerId,
+        reviewedId,
+        activityId,
+        communication,
+        productivity,
+        efficiency,
+        openness,
+        balance
+      }
+    });
+  }
+
   newAccessRequest(id, reqType) {
     return axios.post('/newAccessRequest', null, {
       params: {
@@ -87,6 +104,14 @@ class DataService {
     return axios.get('/getActivity', {
       params: {
         activityid
+      }
+    });
+  }
+
+  getAllReviewerPendingReviews(reviewerid) {
+    return axios.get('/getAllReviewerPendingReviews', {
+      params: {
+        reviewerid
       }
     });
   }

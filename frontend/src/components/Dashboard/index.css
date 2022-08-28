@@ -18,6 +18,46 @@
     margin: 10px;
 }
 
+.pendingReviews {
+    border-top: 3px solid black;
+}
+
 .accordion {
+    border-bottom: 3px solid rgb(185, 185, 185);
+}
+
+.review {
+    border-top: 3px solid black;
+    margin-top: 50px;
+    padding: 20px;
+}
+
+.communication {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid rgb(185, 185, 185);
+}              
+
+.productivity {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid rgb(185, 185, 185);
+}
+
+.efficiency {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid rgb(185, 185, 185);
+}                
+
+.openess {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid rgb(185, 185, 185);
+}                    
+
+.balance {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
     border-bottom: 3px solid rgb(185, 185, 185);
 }
