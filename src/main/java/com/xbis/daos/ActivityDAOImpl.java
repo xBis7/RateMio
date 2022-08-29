@@ -40,7 +40,7 @@ public class ActivityDAOImpl implements ActivityDAO {
   public List<Activity> getAllUserActivities(long ownerId) {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT a.activityid, a.user.userid, a.activityname, a.membernum, a.teamnum " +
+    String sqlQuery = "SELECT a.activityid, a.user.username, a.activityname, a.membernum, a.teamnum " +
         "FROM Activity a WHERE a.user.userid = :ownerid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("ownerid", ownerId);

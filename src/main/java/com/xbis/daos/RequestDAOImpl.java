@@ -38,7 +38,7 @@ public class RequestDAOImpl implements RequestDAO {
   public List<Request> getAllAccessRequests() {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT r.requestid, r.sender.userid, r.reqtype" +
+    String sqlQuery = "SELECT r.requestid, r.sender.userid, r.sender.username, r.reqtype" +
         " FROM Request r WHERE r.reqtype = 'access'";
     Query query = session.createQuery(sqlQuery);
     List <Request> requestList = query.getResultList();

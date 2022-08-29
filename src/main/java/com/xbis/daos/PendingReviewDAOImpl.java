@@ -27,7 +27,8 @@ public class PendingReviewDAOImpl implements PendingReviewDAO {
   public List<PendingReview> getAllPendingReviews() {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT pr.reviewid, pr.receiver.userid, pr.sender.userid, pr.activity.activityid" +
+    String sqlQuery = "SELECT pr.reviewid, pr.reviewer.userid, pr.reviewer.username," +
+        " pr.reviewed.userid, pr.reviewed.username, pr.activity.activityid, pr.activity.activityname" +
         " FROM PendingReview pr";
     Query query = session.createQuery(sqlQuery);
     List <PendingReview> pendingReviewList = query.getResultList();
@@ -36,7 +37,7 @@ public class PendingReviewDAOImpl implements PendingReviewDAO {
   }
 
   @Override
-  public List<PendingReview> getAllReviewedReviews(long reviewedId) {
+  public List<PendingReview> getAllReviewedPendingReviews(long reviewedId) {
     Session session = this.sessionFactory.getCurrentSession();
 
     String sqlQuery = "SELECT pr.reviewid, pr.reviewer.userid, pr.reviewed.userid, pr.activity.activityid" +
@@ -49,7 +50,7 @@ public class PendingReviewDAOImpl implements PendingReviewDAO {
   }
 
   @Override
-  public List<PendingReview> getAllReviewerReviews(long reviewerId) {
+  public List<PendingReview> getAllReviewerPendingReviews(long reviewerId) {
     Session session = this.sessionFactory.getCurrentSession();
 
     String sqlQuery = "SELECT pr.reviewid, pr.reviewed.userid, pr.reviewed.username, " +
@@ -79,6 +80,24 @@ public class PendingReviewDAOImpl implements PendingReviewDAO {
   public PendingReview getPendingReview(long reviewId) {
     Session session = this.sessionFactory.getCurrentSession();
     PendingReview pendingReview = (PendingReview) session.get(PendingReview.class, reviewId);
+    return pendingReview;
+  }
+
+  @Override
+  public PendingReview getPendingReviewEntry(long reviewerId,
+                                             long reviewedId,
+                                             long activityId) {
+    Session session = this.sessionFactory.getCurrentSession();
+    String sqlQuery = "SELECT pr FROM PendingReview pr WHERE pr.reviewer.userid = :reviewerid " +
+        "AND pr.reviewed.userid = :reviewedid AND pr.activity.activityid = :activityid";
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("reviewerid", reviewerId);
+    query.setParameter("reviewedid", reviewedId);
+    query.setParameter("activityid", activityId);
+    List <PendingReview> pendingReviewList = query.getResultList();
+
+    PendingReview pendingReview = (PendingReview) pendingReviewList.get(0);
+
     return pendingReview;
   }
 

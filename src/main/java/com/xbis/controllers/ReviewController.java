@@ -8,7 +8,12 @@ import com.xbis.services.PendingReviewService;
 import com.xbis.services.ReviewService;
 import com.xbis.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,10 +38,23 @@ public class ReviewController {
   @ResponseBody
   public String getAllReviewerPendingReviews(@RequestParam("reviewerid") long reviewerid)
       throws JsonProcessingException {
-    List<PendingReview> pendingReviewList = pendingReviewService.getAllReviewerReviews(reviewerid);
+    List<PendingReview> pendingReviewList = pendingReviewService.getAllReviewerPendingReviews(reviewerid);
     ObjectMapper mapper = new ObjectMapper();
 
     String list = mapper.writeValueAsString(pendingReviewList);
+
+    return list;
+  }
+
+  @RequestMapping(value = "/getAllReviewerReviews", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getAllReviewerReviews(@RequestParam("reviewerid") long reviewerid)
+      throws JsonProcessingException {
+    List<Review> reviewList = reviewService.getAllReviewerReviews(reviewerid);
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(reviewList);
 
     return list;
   }
@@ -66,7 +84,25 @@ public class ReviewController {
 
     reviewService.addReview(review);
 
+    PendingReview pendingReview = pendingReviewService
+        .getPendingReviewEntry(reviewerid, reviewedid, activityid);
+
+    // remove PendingReview
+    pendingReviewService.deletePendingReview(pendingReview.getReviewid());
+
     confToken.setSuccess(true);
     return confToken;
+  }
+
+  @RequestMapping(value = "/getAllPendingReviews", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getAllPendingReviews() throws JsonProcessingException {
+    List <PendingReview> pendingReviewList = pendingReviewService.getAllPendingReviews();
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(pendingReviewList);
+
+    return list;
   }
 }

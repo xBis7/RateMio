@@ -69,5 +69,6 @@ create table reviews (
     primary key (reviewid),
     foreign key (reviewerid) references users(userid),
     foreign key (reviewedid) references users(userid),
-    foreign key (activityid) references activities(activityid)
+    foreign key (activityid) references activities(activityid),
+    unique (reviewerid, reviewedid, activityid)
 );

@@ -274,7 +274,7 @@ export default function Activity() {
           <Card.Text>
             Number of members: {memberNum-1}
             <br/>
-            Number of teams: {teamNum}
+            {/* Number of teams: {teamNum} */}
           </Card.Text>
           
           {memberNum === 1 && 

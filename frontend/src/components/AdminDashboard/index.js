@@ -11,6 +11,7 @@ export default function AdminDashboard() {
   const [requests, setRequests] = useState('');
   const [activities, setActivities] = useState('');
   const [reviews, setReviews] = useState('');
+  const [pendingReviews, setPendingReviews] = useState('');
 
   const [authUser, setAuthUser] = useState({});
 
@@ -23,6 +24,7 @@ export default function AdminDashboard() {
       setAuthUser(JSON.stringify(user));
       getAllUsers(user.userId);
       getAllAccessRequests();
+      getAllPendingReviews();
     }
   }, []);
 
@@ -48,6 +50,17 @@ export default function AdminDashboard() {
       })
   }
 
+  const getAllPendingReviews = async () => {
+
+    DataService.getAllPendingReviews()
+      .then(response => {
+        setPendingReviews(response.data);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response);
+        alert(errMessage);
+      })
+  }
+
   const getAllUserActivities = (currId) => {
     
     DataService.getAllUserActivities(currId)
@@ -56,6 +69,20 @@ export default function AdminDashboard() {
           alert('User has no activities!');
         }
         setActivities(response.data);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
+  }
+
+  const getAllReviewerReviews = (currId) => {
+    
+    DataService.getAllReviewerReviews(currId)
+      .then(response => {
+        if (response.data.length === 0) {
+          alert('User has no reviews!');
+        }
+        setReviews(response.data);
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
@@ -171,7 +198,7 @@ export default function AdminDashboard() {
                 <Button variant='secondary' onClick={() => getAllUserActivities(item[0])}>Activities</Button>
               </td>
               <td>
-                <Button variant='secondary'>Reviews</Button>
+                <Button variant='secondary' onClick={() => getAllReviewerReviews(item[0])}>Reviews</Button>
               </td>
             </tr>
           ))}
@@ -194,6 +221,7 @@ export default function AdminDashboard() {
           <tr>
             <th>Request Id</th>
             <th>User Id</th>
+            <th>Username</th>
             <th>Type</th>
             <th>Delete Request</th>
           </tr>
@@ -202,6 +230,7 @@ export default function AdminDashboard() {
               <td>{item[0]}</td>
               <td>{item[1]}</td>
               <td>{item[2]}</td>
+              <td>{item[3]}</td>
               <td>
                 <Button variant="danger" onClick={() => deleteRequest(parseFloat(item[0]))}>
                   Delete
@@ -216,39 +245,96 @@ export default function AdminDashboard() {
       <br/>
       <br/>
 
-      <h3>Selected user activities</h3>
-      
-      {activities.length === 0 &&
-        <p>Select a user to view his activities.</p>
+      <h3>Pending Reviews</h3>
+
+      {pendingReviews.length === 0 && 
+        <p>There are no pending reviews.</p>
       }
 
-      {activities.length > 0 && 
+      {pendingReviews.length > 0 &&
         <Table striped>
-        <tbody>
-          <tr>
-            <th>Activity Id</th>
-            <th>Owner Id</th>
-            <th>Activity name</th>
-            <th>Number of members</th>
-            <th>Number of teams</th>
-            <th>Open activity</th>
-          </tr>
-          {Object.values(activities).map((item) => (
+          <tbody>
             <tr>
-              <td>{item[0]}</td>
-              <td>{item[1]}</td>
-              <td>{item[2]}</td>
-              <td>{item[3]}</td>
-              <td>{item[4]}</td>
-              <td>             
-                <Button variant='info' href={`activity/${item[0]}`}>
-                  Open
-                </Button>
-              </td>
+              <th>Reviewer</th>
+              <th>Leave review to</th>
+              <th>Activity name</th>
             </tr>
-          ))}
-        </tbody>
+            {Object.values(pendingReviews).map((item) => (
+              <tr>
+                <td>{item[2]}</td>
+                <td>{item[4]}</td>
+                <td>{item[6]}</td>
+              </tr>
+            ))}
+          </tbody>
         </Table>
+      }
+
+      <br/>
+      <br/>
+
+      {activities.length > 0 && 
+        <div>
+          <h3>Selected user activities</h3>
+          <Table striped>
+          <tbody>
+            <tr>
+              <th>Activity Id</th>
+              <th>Owner username</th>
+              <th>Activity name</th>
+              <th>Number of members</th>
+              {/* <th>Number of teams</th> */}
+              <th>Open activity</th>
+            </tr>
+            {Object.values(activities).map((item) => (
+              <tr>
+                <td>{item[0]}</td>
+                <td>{item[1]}</td>
+                <td>{item[2]}</td>
+                <td>{item[3]}</td>
+                {/* <td>{item[4]}</td> */}
+                <td>             
+                  <Button variant='info' href={`activity/${item[0]}`}>
+                    Open
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          </Table>
+        </div>
+      }
+
+      {reviews.length > 0 && 
+        <div>
+          <h3>Selected user reviews</h3>
+          <Table striped>
+          <tbody>
+            <tr>
+              <th>Reviewer</th>
+              <th>Reviewed username</th>
+              <th>Activity name</th>
+              <th>Communication</th>
+              <th>Productivity</th>
+              <th>Efficiency</th>
+              <th>Openness</th>
+              <th>Balance</th>
+            </tr>
+            {Object.values(reviews).map((item) => (
+              <tr>
+                <td>{item[0]}</td>
+                <td>{item[1]}</td>
+                <td>{item[2]}</td>
+                <td>{item[3]}</td>
+                <td>{item[4]}</td>
+                <td>{item[5]}</td>
+                <td>{item[6]}</td>
+                <td>{item[7]}</td>
+              </tr>
+            ))}
+          </tbody>
+          </Table>
+        </div>
       }
     </div>
   );

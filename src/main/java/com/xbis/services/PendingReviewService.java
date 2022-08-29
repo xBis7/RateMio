@@ -8,13 +8,15 @@ public interface PendingReviewService {
 
   public List<PendingReview> getAllPendingReviews();
 
-  public List<PendingReview> getAllReviewedReviews(long reviewedId);
+  public List<PendingReview> getAllReviewedPendingReviews(long reviewedId);
 
-  public List<PendingReview> getAllReviewerReviews(long reviewerId);
+  public List<PendingReview> getAllReviewerPendingReviews(long reviewerId);
 
   public List<PendingReview> getAllActivityReviews(long activityId);
 
   public PendingReview getPendingReview(long reviewId);
+
+  public PendingReview getPendingReviewEntry(long reviewerId, long reviewedId, long activityId);
 
   public PendingReview addPendingReview(PendingReview pendingReview);
 

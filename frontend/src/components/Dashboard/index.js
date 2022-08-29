@@ -208,11 +208,11 @@ export default function Dashboard() {
                     <tbody>
                       <tr>
                         <th>Number of members</th>
-                        <th>Number of teams</th>
+                        {/* <th>Number of teams</th> */}
                       </tr>
                         <tr>
                           <td>{item[3]-1}</td>
-                          <td>{item[4]}</td>
+                          {/* <td>{item[4]}</td> */}
                         </tr>
                     </tbody>
                   </Table>

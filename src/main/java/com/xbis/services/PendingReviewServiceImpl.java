@@ -22,14 +22,14 @@ public class PendingReviewServiceImpl implements PendingReviewService {
 
   @Override
   @Transactional
-  public List<PendingReview> getAllReviewedReviews(long reviewedId) {
-    return pendingReviewDAO.getAllReviewedReviews(reviewedId);
+  public List<PendingReview> getAllReviewedPendingReviews(long reviewedId) {
+    return pendingReviewDAO.getAllReviewedPendingReviews(reviewedId);
   }
 
   @Override
   @Transactional
-  public List<PendingReview> getAllReviewerReviews(long reviewerId) {
-    return pendingReviewDAO.getAllReviewerReviews(reviewerId);
+  public List<PendingReview> getAllReviewerPendingReviews(long reviewerId) {
+    return pendingReviewDAO.getAllReviewerPendingReviews(reviewerId);
   }
 
   @Override
@@ -42,6 +42,12 @@ public class PendingReviewServiceImpl implements PendingReviewService {
   @Transactional
   public PendingReview getPendingReview(long reviewId) {
     return pendingReviewDAO.getPendingReview(reviewId);
+  }
+
+  @Override
+  @Transactional
+  public PendingReview getPendingReviewEntry(long reviewerId, long reviewedId, long activityId) {
+    return pendingReviewDAO.getPendingReviewEntry(reviewerId, reviewedId, activityId);
   }
 
   @Override
