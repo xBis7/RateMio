@@ -46,6 +46,18 @@ public class ReviewDAOImpl implements ReviewDAO {
   }
 
   @Override
+  public List<Review> getAllActivityReviews(long activityid) {
+    Session session = this.sessionFactory.getCurrentSession();
+    String sqlQuery = "SELECT r.reviewid, r.reviewer.userid, r.reviewer.username, r.reviewed.userid, " +
+        "r.reviewed.username, r.activity.activityname, r.communication, r.productivity, " +
+        "r.efficiency, r.openness, r.balance FROM Review r WHERE r.activity.activityid = :activityid";
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("activityid", activityid);
+    List <Review> list = query.getResultList();
+    return list;
+  }
+
+  @Override
   public Review getReview(long reviewId) {
     Session session = this.sessionFactory.getCurrentSession();
     Review review = (Review) session.get(Review.class, reviewId);

@@ -28,6 +28,12 @@ public class ReviewServiceImpl implements ReviewService {
 
   @Override
   @Transactional
+  public List<Review> getAllActivityReviews(long activityid){
+    return reviewDAO.getAllActivityReviews(activityid);
+  }
+
+  @Override
+  @Transactional
   public Review getReview(long reviewId) {
     return reviewDAO.getReview(reviewId);
   }

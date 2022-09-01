@@ -64,11 +64,11 @@ public class PendingReviewDAOImpl implements PendingReviewDAO {
   }
 
   @Override
-  public List<PendingReview> getAllActivityReviews(long activityId) {
+  public List<PendingReview> getAllActivityPendingReviews(long activityId) {
     Session session = this.sessionFactory.getCurrentSession();
 
-    String sqlQuery = "SELECT pr.reviewid, pr.reviewer.userid, pr.reviewed.userid, pr.activity.activityid" +
-        " FROM PendingReview pr WHERE pr.activity.activityid = :activityid";
+    String sqlQuery = "SELECT pr.reviewid, pr.reviewer.userid, pr.reviewer.username, pr.reviewed.userid, pr.reviewed.username, " +
+        "pr.activity.activityid FROM PendingReview pr WHERE pr.activity.activityid = :activityid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("activityid", activityId);
     List <PendingReview> pendingReviewList = query.getResultList();

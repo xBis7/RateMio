@@ -34,8 +34,8 @@ public class PendingReviewServiceImpl implements PendingReviewService {
 
   @Override
   @Transactional
-  public List<PendingReview> getAllActivityReviews(long activityId) {
-    return pendingReviewDAO.getAllActivityReviews(activityId);
+  public List<PendingReview> getAllActivityPendingReviews(long activityId) {
+    return pendingReviewDAO.getAllActivityPendingReviews(activityId);
   }
 
   @Override

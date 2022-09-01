@@ -9,6 +9,16 @@
     border-top: 3px solid black;
 }
 
+.pendingReviews {
+    margin-top: 25px;
+    border-top: 3px solid black;
+}
+
+.submittedReviews {
+    margin-top: 25px;
+    border-top: 3px solid black;
+}
+
 Label {
     font-weight: bold;
 }

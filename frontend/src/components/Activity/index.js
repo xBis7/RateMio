@@ -12,6 +12,7 @@ export default function Activity() {
   const [members, setMembers] = useState('');
   const [teams, setTeams] = useState();  
   const [reviews, setReviews] = useState('');
+  const [pendingReviews, setPendingReviews] = useState('');
 
   const [id, setId] = useState();
   const [ownerId, setOwnerId] = useState();
@@ -31,6 +32,8 @@ export default function Activity() {
     const user = JSON.parse(loggedUser);
     getAllUsersNonAdminNonMember();
     getActivity();
+    getActivityReviews();
+    getActivityPendingReviews();
     //get teams from local storage    
     //const savedTeamMaker = localStorage.getItem('displayTeamMaker');
     //const savedTeams = localStorage.getItem('teams');
@@ -66,6 +69,32 @@ export default function Activity() {
         const userId = response.data[0][1];
 
         getAllActivityUsers(userId, actId);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response);
+        alert(errMessage);
+      })
+  }
+
+  const getActivityPendingReviews = async () => {
+
+    const id = {activityid};
+
+    DataService.getActivityPendingReviews(id.activityid)
+      .then(response => {
+        setPendingReviews(response.data);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response);
+        alert(errMessage);
+      })
+  }
+
+  const getActivityReviews = async () => {
+
+    const id = {activityid};
+    
+    DataService.getActivityReviews(id.activityid)
+      .then(response => {
+        setReviews(response.data);
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response);
         alert(errMessage);
@@ -303,13 +332,20 @@ export default function Activity() {
                   ))}
                 </tbody>
               </Table>
+              {pendingReviews.length === 0 && 
+                <Button variant='info' onClick={checkForTeams}>
+                  Create teams
+                </Button>
+              }
 
-              <Button variant='info' onClick={checkForTeams}>
-                Create teams
-              </Button>
+              {pendingReviews.length > 0 && 
+                <Button variant='info' onClick={checkForTeams}>
+                  Create new teams
+                </Button>
+              }
             </div>
           } 
-          {displayTeamMaker === true && 
+          {(displayTeamMaker === true)&& 
             <div className='createTeams'>
             <br/>
             <button
@@ -411,6 +447,62 @@ export default function Activity() {
             </div>
           </div>
         }
+
+        {(reviewRequestsSent === true || pendingReviews.length > 0)&&
+          <div className="pendingReviews">
+            <br/>
+            <h3>Pending reviews</h3>
+            <br/>
+            <Table striped>
+              <tbody>
+                <tr>
+                  <th>Reviewer</th>
+                  <th>Leave review to</th>
+                </tr>
+                {Object.values(pendingReviews).map((item) => (
+                  <tr>
+                    <td>{item[2]}</td>
+                    <td>{item[4]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        }
+
+
+        {(reviewRequestsSent === true || reviews.length > 0)&&
+          <div className="submittedReviews">
+            <br/>
+            <h3>Submitted reviews</h3>
+            <br/>
+            <Table striped>
+              <tbody>
+                <tr>
+                  <th>Reviewer</th>
+                  <th>Left review to</th>
+                  <th>Communication</th>
+                  <th>Productivity</th>
+                  <th>Efficiency</th>
+                  <th>Openness</th>
+                  <th>Balance</th>
+                </tr>
+                {Object.values(reviews).map((item) => (
+                  <tr>
+                    <td>{item[2]}</td>
+                    <td>{item[4]}</td>
+                    <td>{item[6]}</td>
+                    <td>{item[7]}</td>
+                    <td>{item[8]}</td>
+                    <td>{item[9]}</td>
+                    <td>{item[10]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        }
+
         </Card.Body>
         </Card>
 

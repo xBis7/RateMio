@@ -12,7 +12,7 @@ public interface PendingReviewService {
 
   public List<PendingReview> getAllReviewerPendingReviews(long reviewerId);
 
-  public List<PendingReview> getAllActivityReviews(long activityId);
+  public List<PendingReview> getAllActivityPendingReviews(long activityId);
 
   public PendingReview getPendingReview(long reviewId);
 

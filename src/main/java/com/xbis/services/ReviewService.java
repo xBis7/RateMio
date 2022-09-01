@@ -10,6 +10,8 @@ public interface ReviewService {
 
   public List<Review> getAllUserReviews(long userId);
 
+  public List<Review> getAllActivityReviews(long activityid);
+
   public Review getReview(long reviewId);
 
   public Review addReview(Review review);

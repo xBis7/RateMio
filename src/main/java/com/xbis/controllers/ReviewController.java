@@ -105,4 +105,31 @@ public class ReviewController {
 
     return list;
   }
+
+  @RequestMapping(value = "/getActivityPendingReviews", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getActivityPendingReviews(@RequestParam("activityid") long activityid)
+      throws JsonProcessingException {
+    List <PendingReview> pendingReviewList =
+        pendingReviewService.getAllActivityPendingReviews(activityid);
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(pendingReviewList);
+
+    return list;
+  }
+
+  @RequestMapping(value = "/getActivityReviews", method = RequestMethod.GET,
+      produces = {"application/json"})
+  @ResponseBody
+  public String getActivityReviews(@RequestParam("activityid") long activityid)
+      throws JsonProcessingException {
+    List <Review> reviewList = reviewService.getAllActivityReviews(activityid);
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(reviewList);
+
+    return list;
+  }
 }

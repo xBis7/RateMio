@@ -17,7 +17,7 @@ public class Review {
   @Id
   @Column(name = "reviewid")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long reviewId;
+  private long reviewid;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "reviewerid")
@@ -50,12 +50,12 @@ public class Review {
     super();
   }
 
-  public Review(long reviewId, User reviewer,
+  public Review(long reviewid, User reviewer,
                 User reviewed, Activity activity,
                 int communication, int productivity,
                 int efficiency, int openness, int balance) {
     super();
-    this.reviewId = reviewId;
+    this.reviewid = reviewid;
     this.reviewer = reviewer;
     this.reviewed = reviewed;
     this.activity = activity;
@@ -66,12 +66,12 @@ public class Review {
     this.balance = balance;
   }
 
-  public long getReviewId() {
-    return reviewId;
+  public long getReviewid() {
+    return reviewid;
   }
 
-  public void setReviewId(long reviewId) {
-    this.reviewId = reviewId;
+  public void setReviewid(long reviewid) {
+    this.reviewid = reviewid;
   }
 
   public User getReviewer() {

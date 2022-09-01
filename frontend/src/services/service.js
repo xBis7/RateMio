@@ -96,6 +96,22 @@ class DataService {
     return axios.get('/getAllPendingReviews');
   }
 
+  getActivityPendingReviews(activityid) {
+    return axios.get('/getActivityPendingReviews', {
+      params: {
+        activityid
+      }
+    });
+  }
+
+  getActivityReviews(activityid) {
+    return axios.get('/getActivityReviews', {
+      params: {
+        activityid
+      }
+    });
+  }
+
   getAllReviewerReviews(reviewerid) {
     return axios.get('/getAllReviewerReviews', {
       params: {
