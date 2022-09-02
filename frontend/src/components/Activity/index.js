@@ -3,7 +3,7 @@ import React from 'react';
 import DataService from '../../services/service';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Table, Card } from 'react-bootstrap';
+import { Button, Table, Card, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Activity() {
@@ -136,6 +136,10 @@ export default function Activity() {
     } else {
       alert('Activity members must be at least 4 to create teams');
     }
+  }
+
+  const getTeamSuggestions = async () => {
+    alert('response from software');
   }
 
   const removeActivityMember = async (userid) => {
@@ -333,15 +337,40 @@ export default function Activity() {
                 </tbody>
               </Table>
               {pendingReviews.length === 0 && 
-                <Button variant='info' onClick={checkForTeams}>
+                <Button variant='info' onClick={checkForTeams}
+                style={{
+                  margin: "10px"
+                }}>
                   Create teams
                 </Button>
               }
 
               {pendingReviews.length > 0 && 
-                <Button variant='info' onClick={checkForTeams}>
+                <Button variant='info' onClick={checkForTeams}
+                style={{
+                  margin: "10px"
+                }}>
                   Create new teams
                 </Button>
+              }
+
+              {(pendingReviews.length === 0 && reviews.length > 0) &&
+                <OverlayTrigger
+                  key={'right'}
+                  placement={'right'}
+                  overlay={
+                    <Tooltip id={`tooltip-${'right'}`}>
+                      Previous round of reviews finished
+                    </Tooltip>
+                  }
+                >
+                  <Button variant='info' onClick={getTeamSuggestions}
+                    style={{
+                      margin: "10px"
+                    }}>
+                    Get team suggestions
+                  </Button>
+                </OverlayTrigger>
               }
             </div>
           } 
