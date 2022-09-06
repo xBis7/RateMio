@@ -2,7 +2,11 @@ package com.xbis.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xbis.models.*;
+import com.xbis.models.User;
+import com.xbis.models.PendingReview;
+import com.xbis.models.Review;
+import com.xbis.models.Activity;
+import com.xbis.models.ConfToken;
 import com.xbis.services.ActivityService;
 import com.xbis.services.PendingReviewService;
 import com.xbis.services.ReviewService;

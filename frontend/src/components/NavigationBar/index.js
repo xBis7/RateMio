@@ -1,6 +1,6 @@
 import './index.css'
 import React from 'react';
-import Logo from '../../images/RateMio.png';
+import Logo from '../../resources/RateMio.png';
 import { Nav, Container, Navbar, Image, Form, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 

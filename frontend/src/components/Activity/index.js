@@ -3,7 +3,7 @@ import React from 'react';
 import DataService from '../../services/service';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Table, Card, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Button, Table, Card, Tooltip, OverlayTrigger, Alert } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Activity() {
@@ -11,6 +11,7 @@ export default function Activity() {
   const [users, setUsers] = useState('');
   const [members, setMembers] = useState('');
   const [teams, setTeams] = useState();  
+  const [newTeams, setNewTeams] = useState('');
   const [reviews, setReviews] = useState('');
   const [pendingReviews, setPendingReviews] = useState('');
 
@@ -19,7 +20,6 @@ export default function Activity() {
   const [username, setUsername] = useState('');
   const [activityName, setActivityName] = useState('');
   const [memberNum, setMemberNum] = useState('');
-  const [teamNum, setTeamNum] = useState('');
 
   const [displayTeamMaker, setDisplayTeamMaker] = useState(false);
   const [reviewRequestsSent, setReviewRequestsSent] = useState(false);
@@ -63,7 +63,6 @@ export default function Activity() {
         setUsername(response.data[0][2]);
         setActivityName(response.data[0][3]);
         setMemberNum(response.data[0][4]);
-        setTeamNum(response.data[0][5]);
 
         const actId = response.data[0][0];
         const userId = response.data[0][1];
@@ -139,7 +138,95 @@ export default function Activity() {
   }
 
   const getTeamSuggestions = async () => {
-    alert('response from software');
+
+//    const data = require('../../resources/test.json');
+    // 0 reviewid 
+    // 1 reviewer userid
+    // 2 reviewer username
+    // 3 reviewed userid
+    // 4 reviewed username
+    // 5 activityName
+    // 6 communication
+    // 7 productivity
+    // 8 efficiency
+    // 9 openness
+    // 10 balance
+
+    // quality         (productivity, efficiency)
+    // cooperation     (communication, openess, balance)
+
+    var object = {};
+    object["userGlobalScores"] = [];
+    object["userPairwiseScore"] = [];
+    object["userCollaborationIntentions"] = [];
+
+    for (var i=0; i<reviews.length; i++) {
+
+      var qualityVal = (reviews[i][7] + reviews[i][8])/2;
+      var collaborationVal = (reviews[i][6] + reviews[i][9] + reviews[i][10])/3;
+
+      var avgScore = (qualityVal + collaborationVal)/2;
+      var intentionVal;
+
+      //totalQuality - totalCollab based on userid
+      var totalQuality = 4;
+      var totalCollab = 3;
+
+      if (avgScore < 2.5) {
+        intentionVal = "dwant";
+      } else if (avgScore > 3) {
+        intentionVal = "want";
+      } else {
+        intentionVal = "idc";
+      }
+        
+      object["userGlobalScores"].push(
+        {
+          "userId": reviews[i][2],
+          "score": {
+            "quality": totalQuality,
+            "collaboration": totalCollab 
+          }
+        });
+
+      object["userPairwiseScore"].push(
+        {
+          "gradingUser": reviews[i][2],
+          "scoresGiven": [
+            {
+              "userId": reviews[i][4],
+              "score": {
+                "quality": qualityVal,
+                "collaboration": collaborationVal
+              }
+            }
+          ]  
+        });
+   
+      object["userCollaborationIntentions"].push(
+        {
+          "gradingUser": reviews[i][2],
+          "intentions": [
+            {
+              "userId": reviews[i][4],
+              "intention": intentionVal
+            }
+          ]
+        });
+    } 
+
+    var jsonReviews = JSON.stringify(object);
+    //alert(jsonReviews);
+
+    DataService.getTeamSuggestions(jsonReviews)
+    .then(response => {
+      //alert(JSON.stringify(response.data));
+      setNewTeams(response.data);
+    }).catch(err => {
+      setErrMessage('Server Error: ' + err.response.data);
+      alert(errMessage);
+    })
+
   }
 
   const removeActivityMember = async (userid) => {
@@ -200,6 +287,7 @@ export default function Activity() {
     }
     alert('Review requests were sent successfully to all members');
     setReviewRequestsSent(true);
+    window.location.reload();
   }
 
   const refreshTeams = async () => {
@@ -492,6 +580,30 @@ export default function Activity() {
                   <tr>
                     <td>{item[2]}</td>
                     <td>{item[4]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        }
+
+        {newTeams.length > 0 && 
+          <div className="newTeams">
+            <br/>
+            <h3>New team suggestions</h3>
+            <br/>
+            <Table striped>
+              <tbody>
+                <tr>
+                  <th>Team number</th>
+                  <th>Member1</th>
+                  <th>Member2</th>
+                </tr>
+                {Object.values(newTeams).map((item, index) => (
+                  <tr>
+                    <td>{index+1}</td>
+                    <td>{item.user1}</td>
+                    <td>{item.user2}</td>
                   </tr>
                 ))}
               </tbody>

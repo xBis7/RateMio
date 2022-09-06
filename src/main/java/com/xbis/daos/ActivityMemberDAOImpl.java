@@ -1,16 +1,15 @@
 package com.xbis.daos;
 
-import com.xbis.models.*;
+import com.xbis.models.Activity;
+import com.xbis.models.ActivityMember;
+import com.xbis.models.User;
+import com.xbis.models.Request;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.naming.event.ObjectChangeListener;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Repository

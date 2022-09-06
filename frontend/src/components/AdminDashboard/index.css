@@ -6,3 +6,15 @@ td, th {
   border: 1px solid #ddd;
   padding: 8px;
 }
+
+.selectedUserActivities {
+  padding: 20px;
+  margin-top: 25px;
+  border-top: 3px solid black;
+}
+
+.selectedUserReviews {
+  padding: 20px;
+  margin-top: 25px;
+  border-top: 3px solid black;
+}

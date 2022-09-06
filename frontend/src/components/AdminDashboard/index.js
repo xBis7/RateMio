@@ -274,7 +274,7 @@ export default function AdminDashboard() {
       <br/>
 
       {activities.length > 0 && 
-        <div>
+        <div className="selectedUserActivities">
           <h3>Selected user activities</h3>
           <Table striped>
           <tbody>
@@ -306,7 +306,7 @@ export default function AdminDashboard() {
       }
 
       {reviews.length > 0 && 
-        <div>
+        <div className="selectedUserReviews">
           <h3>Selected user reviews</h3>
           <Table striped>
           <tbody>

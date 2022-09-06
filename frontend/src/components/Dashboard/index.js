@@ -225,7 +225,9 @@ export default function Dashboard() {
         </div>
         }
 
-        {access === 3 &&
+        <br/>
+        <br/>
+        
         <div className='pendingReviews'>
           <br/>
           <h3>Pending Reviews</h3>
@@ -714,7 +716,6 @@ export default function Dashboard() {
           }
 
         </div>
-        }
         
       </section>
     </div>

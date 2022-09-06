@@ -1,7 +1,5 @@
 package com.xbis.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xbis.models.ConfToken;
 import com.xbis.models.Request;
 import com.xbis.models.User;

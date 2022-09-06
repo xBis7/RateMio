@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^14.1.1",
     "axios": "^0.27.2",
     "bootstrap": "5.1",
+    "fetch-to-curl": "^0.5.2",
     "react": "^18.1.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-bootstrap": "^2.3.1",
@@ -45,5 +46,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8080/RateMio"
+  "devDependencies": {
+    "http-proxy-middleware": "^2.0.6"
+  },
+  "proxy" : "http://localhost:8080/RateMio"
 }

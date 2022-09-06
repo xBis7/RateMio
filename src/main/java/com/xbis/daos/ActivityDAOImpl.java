@@ -1,7 +1,6 @@
 package com.xbis.daos;
 
 import com.xbis.models.Activity;
-import com.xbis.models.Request;
 import com.xbis.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
