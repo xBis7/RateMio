@@ -2,7 +2,7 @@ import './index.css'
 import DataService from '../../services/service';
 import React from 'react';
 import { useState, useEffect } from "react";
-import { Button, Form, ButtonGroup, ToggleButton, ToggleButtonGroup, Table, Accordion } from 'react-bootstrap';
+import { Button, Form, ToggleButton, ToggleButtonGroup, Table, Accordion } from 'react-bootstrap';
 
 export default function Dashboard() {
 

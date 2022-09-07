@@ -3,7 +3,7 @@ import React from 'react';
 import DataService from '../../services/service';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Table, Card, Tooltip, OverlayTrigger, Alert } from 'react-bootstrap';
+import { Button, Table, Card, Tooltip, OverlayTrigger, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Activity() {
@@ -15,7 +15,6 @@ export default function Activity() {
   const [reviews, setReviews] = useState('');
   const [pendingReviews, setPendingReviews] = useState('');
 
-  const [id, setId] = useState();
   const [ownerId, setOwnerId] = useState();
   const [username, setUsername] = useState('');
   const [activityName, setActivityName] = useState('');
@@ -23,6 +22,24 @@ export default function Activity() {
 
   const [displayTeamMaker, setDisplayTeamMaker] = useState(false);
   const [reviewRequestsSent, setReviewRequestsSent] = useState(false);
+  
+  const [leaveReview, setLeaveReview] = useState(false);
+  const [currReviewerId, setCurrReviewerId] = useState();
+  const [currReviewedId, setCurrReviewedId] = useState();
+  
+  // review buttons values
+  const [communication, setCommunication] = useState(3);
+  const [productivity, setProductivity] = useState(3);
+  const [efficiency, setEfficiency] = useState(3);
+  const [openness, setOpenness] = useState(3);
+  const [balance, setBalance] = useState(3);
+
+  // review buttons are checked
+  const [communicationChecked, setCommunicationChecked] = useState(false);
+  const [productivityChecked, setProductivityChecked] = useState(false);
+  const [efficiencyChecked, setEfficiencyChecked] = useState(false);
+  const [opennessChecked, setOpennessChecked] = useState(false);
+  const [balanceChecked, setBalanceChecked] = useState(false);
 
   const [errMessage, setErrMessage] = useState('');
   const { activityid } = useParams();
@@ -58,7 +75,6 @@ export default function Activity() {
 
     DataService.getActivity(id.activityid)
       .then(response => {
-        setId(response.data[0][0]);
         setOwnerId(response.data[0][1]);
         setUsername(response.data[0][2]);
         setActivityName(response.data[0][3]);
@@ -244,6 +260,32 @@ export default function Activity() {
         setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
       })
+  }
+
+  const showReviewSection = (reviewerId, reviewedId) => {
+    setCurrReviewerId(reviewerId);
+    setCurrReviewedId(reviewedId);
+    setLeaveReview(true);
+  }
+
+  const newReview = () => {
+
+    const id = {activityid};
+
+    DataService.newReview(currReviewerId, currReviewedId, id.activityid, 
+                          communication, productivity, efficiency,
+                          openness, balance)
+      .then(response => {
+        if(JSON.stringify(response.data.success) === 'true') {
+          alert('Review was submitted successfully!');
+          window.location.reload();
+        } else {
+          alert('Review submission failed!');
+        } 
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })    
   }
 
   const requestReviews = async () => {
@@ -575,11 +617,17 @@ export default function Activity() {
                 <tr>
                   <th>Reviewer</th>
                   <th>Leave review to</th>
+                  <th>Submit a review</th>
                 </tr>
                 {Object.values(pendingReviews).map((item) => (
                   <tr>
                     <td>{item[2]}</td>
                     <td>{item[4]}</td>
+                    <td>
+                      <Button variant='info' onClick={() => showReviewSection(item[1], item[3])}>
+                        Review
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -677,7 +725,457 @@ export default function Activity() {
           ))}
         </tbody>
         </Table>
-      } 
+      }
+
+      {leaveReview === true && 
+        <div className="review">
+          <p>
+            Please rate the following statements on a scale of 1 to 5.
+            <br/>
+            1 - Strongly Disagree
+            <br/>
+            2 - Somewhat Disagree
+            <br/>
+            3 - Neither Agree Nor Disagree
+            <br/>
+            4 - Somewhat Agree
+            <br/>
+            5 - Strongly Agree
+          </p>
+          <br/>
+          <p>There was great communication during our collaboration.</p>
+
+          <ToggleButtonGroup className="communication" type="radio" name="group1">
+            <ToggleButton 
+              id="communication1"
+              variant="outline-secondary"
+              checked={communicationChecked}
+              value={1}
+              onChange={(e) => {
+                setCommunicationChecked(e.currentTarget.checked); 
+                setCommunication(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              1
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="communication2"
+              variant="outline-secondary"
+              checked={communicationChecked}
+              value={2}
+              onChange={(e) => {
+                setCommunicationChecked(e.currentTarget.checked); 
+                setCommunication(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              2
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="communication3"
+              variant="outline-secondary"
+              checked={communicationChecked}
+              value={3}
+              onChange={(e) => {
+                setCommunicationChecked(e.currentTarget.checked); 
+                setCommunication(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              3
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="communication4"
+              variant="outline-secondary"
+              checked={communicationChecked}
+              value={4}
+              onChange={(e) => {
+                setCommunicationChecked(e.currentTarget.checked); 
+                setCommunication(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              4
+            </ToggleButton>
+              
+            <ToggleButton
+              id="communication5"
+              variant="outline-secondary"
+              checked={communicationChecked}
+              value={5}
+              onChange={(e) => {
+                setCommunicationChecked(e.currentTarget.checked); 
+                setCommunication(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              5
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <br/>
+          <br/>
+          <p>Our collaboration was very productive.</p>
+           
+          <ToggleButtonGroup className="productivity" type="radio" name="group2">
+            <ToggleButton 
+              id="productivity1"
+              variant="outline-secondary"
+              checked={productivityChecked}
+              value={1}
+              onChange={(e) => {
+                setProductivityChecked(e.currentTarget.checked); 
+                setProductivity(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              1
+            </ToggleButton>
+            
+            <ToggleButton 
+              id="productivity2"
+              variant="outline-secondary"
+              checked={productivityChecked}
+              value={2}
+              onChange={(e) => {
+                setProductivityChecked(e.currentTarget.checked); 
+                setProductivity(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              2
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="productivity3"
+              variant="outline-secondary"
+              checked={productivityChecked}
+              value={3}
+              onChange={(e) => {
+                setProductivityChecked(e.currentTarget.checked); 
+                setProductivity(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              3
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="productivity4"
+              variant="outline-secondary"
+              checked={productivityChecked}
+              value={4}
+              onChange={(e) => {
+                setProductivityChecked(e.currentTarget.checked); 
+                setProductivity(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              4
+            </ToggleButton>
+              
+            <ToggleButton
+              id="productivity5"
+              variant="outline-secondary"
+              checked={productivityChecked}
+              value={5}
+              onChange={(e) => {
+                setProductivityChecked(e.currentTarget.checked); 
+                setProductivity(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              5
+            </ToggleButton>
+          </ToggleButtonGroup>
+            
+          <br/>
+          <br/>
+          <p>There was efficiency in achieving the desired outcome.</p>
+           
+          <ToggleButtonGroup className="efficiency" type="radio" name="group3">
+            <ToggleButton 
+              id="efficiency1"
+              variant="outline-secondary"
+              checked={efficiencyChecked}
+              value={1}
+              onChange={(e) => {
+                setEfficiencyChecked(e.currentTarget.checked); 
+                setEfficiency(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              1
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="efficiency2"
+              variant="outline-secondary"
+              checked={efficiencyChecked}
+              value={2}
+              onChange={(e) => {
+                setEfficiencyChecked(e.currentTarget.checked); 
+                setEfficiency(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              2
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="efficiency3"
+              variant="outline-secondary"
+              checked={efficiencyChecked}
+              value={3}
+              onChange={(e) => {
+                setEfficiencyChecked(e.currentTarget.checked); 
+                setEfficiency(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              3
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="efficiency4"
+              variant="outline-secondary"
+              checked={efficiencyChecked}
+              value={4}
+              onChange={(e) => {
+                setEfficiencyChecked(e.currentTarget.checked); 
+                setEfficiency(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              4
+            </ToggleButton>
+              
+            <ToggleButton
+              id="efficiency5"
+              variant="outline-secondary"
+              checked={efficiencyChecked}
+              value={5}
+              onChange={(e) => {
+                setEfficiencyChecked(e.currentTarget.checked); 
+                setEfficiency(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              5
+            </ToggleButton>
+          </ToggleButtonGroup>
+            
+          <br/>
+          <br/>
+          <p>There was an openness to new ideas or concerns.</p>
+            
+          <ToggleButtonGroup className="openness" type="radio" name="group4">
+            <ToggleButton 
+              id="openness1"
+              variant="outline-secondary"
+              checked={opennessChecked}
+              value={1}
+              onChange={(e) => {
+                setOpennessChecked(e.currentTarget.checked); 
+                setOpenness(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              1
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="openness2"
+              variant="outline-secondary"
+              checked={opennessChecked}
+              value={2}
+              onChange={(e) => {
+                setOpennessChecked(e.currentTarget.checked); 
+                setOpenness(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              2
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="openness3"
+              variant="outline-secondary"
+              checked={opennessChecked}
+              value={3}
+              onChange={(e) => {
+                setOpennessChecked(e.currentTarget.checked); 
+                setOpenness(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              3
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="openness4"
+              variant="outline-secondary"
+              checked={opennessChecked}
+              value={4}
+              onChange={(e) => {
+                setOpennessChecked(e.currentTarget.checked); 
+                setOpenness(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              4
+            </ToggleButton>
+              
+            <ToggleButton
+              id="openness5"
+              variant="outline-secondary"
+              checked={opennessChecked}
+              value={5}
+              onChange={(e) => {
+                setOpennessChecked(e.currentTarget.checked); 
+                setOpenness(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              5
+            </ToggleButton>
+          </ToggleButtonGroup>
+            
+          <br/>
+          <br/>
+          <p>There was balance between our levels of expertise.</p>
+          
+          <ToggleButtonGroup className="balance" type="radio" name="group5">
+            <ToggleButton 
+              id="balance1"
+              variant="outline-secondary"
+              checked={balanceChecked}
+              value={1}
+              onChange={(e) => {
+                setBalanceChecked(e.currentTarget.checked); 
+                setBalance(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              1
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="balance2"
+              variant="outline-secondary"
+              checked={balanceChecked}
+              value={2}
+              onChange={(e) => {
+                setBalanceChecked(e.currentTarget.checked); 
+                setBalance(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              2
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="balance3"
+              variant="outline-secondary"
+              checked={balanceChecked}
+              value={3}
+              onChange={(e) => {
+                setBalanceChecked(e.currentTarget.checked); 
+                setBalance(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              3
+            </ToggleButton>
+              
+            <ToggleButton 
+              id="balance4"
+              variant="outline-secondary"
+              checked={balanceChecked}
+              value={4}
+              onChange={(e) => {
+                setBalanceChecked(e.currentTarget.checked); 
+                setBalance(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              4
+            </ToggleButton>
+              
+            <ToggleButton
+              id="balance5"
+              variant="outline-secondary"
+              checked={balanceChecked}
+              value={5}
+              onChange={(e) => {
+                setBalanceChecked(e.currentTarget.checked); 
+                setBalance(e.currentTarget.value);
+              }}
+              style={{
+                margin: "5px"
+              }}
+              >
+              5
+            </ToggleButton>
+          </ToggleButtonGroup>
+            
+          <br/>
+          <br/>
+          <Button variant="primary" onClick={newReview}>Submit Review</Button>
+
+        </div>
+        }
       </section>
     </div>
   );
