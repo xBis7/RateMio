@@ -314,11 +314,9 @@ export default function AdminDashboard() {
               <th>Reviewer</th>
               <th>Reviewed username</th>
               <th>Activity name</th>
-              <th>Communication</th>
-              <th>Productivity</th>
-              <th>Efficiency</th>
-              <th>Openness</th>
-              <th>Balance</th>
+              <th>Quality</th>
+              <th>Collaboration</th>
+              <th>Preference</th>
             </tr>
             {Object.values(reviews).map((item) => (
               <tr>
@@ -328,8 +326,6 @@ export default function AdminDashboard() {
                 <td>{item[3]}</td>
                 <td>{item[4]}</td>
                 <td>{item[5]}</td>
-                <td>{item[6]}</td>
-                <td>{item[7]}</td>
               </tr>
             ))}
           </tbody>

@@ -4,20 +4,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xbis.models.User;
 import com.xbis.models.Activity;
-import com.xbis.models.ActivityMember;
 import com.xbis.models.PendingReview;
+import com.xbis.models.Review;
 import com.xbis.models.ConfToken;
-import com.xbis.services.ActivityMemberService;
-import com.xbis.services.ActivityService;
-import com.xbis.services.PendingReviewService;
+import com.xbis.models.ActivityMember;
+import com.xbis.models.optimization.Optimizing;
 import com.xbis.services.UserService;
+import com.xbis.services.ActivityService;
+import com.xbis.services.ReviewService;
+import com.xbis.services.ActivityMemberService;
+import com.xbis.services.PendingReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -30,6 +33,9 @@ public class ActivityController {
 
   @Autowired
   ActivityService activityService;
+
+  @Autowired
+  ReviewService reviewService;
 
   @Autowired
   ActivityMemberService activityMemberService;
@@ -194,5 +200,20 @@ public class ActivityController {
 
     confToken.setSuccess(true);
     return confToken;
+  }
+
+  @RequestMapping(value = "/matchmaking", method = RequestMethod.POST,
+      consumes = {"application/json"})
+  @ResponseBody
+  public String matchmaking(@RequestParam("activityid") long activityid) {
+
+    Activity activity = activityService.getActivityObject(activityid);
+    int playerNum = activity.getMemberNum()-1;
+    List<Review> reviewList = reviewService.getAllActivityReviews(activityid);
+
+    Optimizing optimizing = new Optimizing(playerNum, reviewList);
+    optimizing.initOptimization();
+
+    return null;
   }
 }

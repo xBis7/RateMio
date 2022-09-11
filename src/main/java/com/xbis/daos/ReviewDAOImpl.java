@@ -27,7 +27,7 @@ public class ReviewDAOImpl implements ReviewDAO {
   public List<Review> getAllReviewerReviews(long reviewerId) {
     Session session = this.sessionFactory.getCurrentSession();
     String sqlQuery = "SELECT r.reviewer.username, r.reviewed.username, r.activity.activityname, " +
-        "r.communication, r.productivity, r.efficiency, r.openness, r.balance " +
+        "r.quality, r.collaboration, r.preference " +
         "FROM Review r WHERE r.reviewer.userid = :reviewerid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("reviewerid", reviewerId);
@@ -49,8 +49,8 @@ public class ReviewDAOImpl implements ReviewDAO {
   public List<Review> getAllActivityReviews(long activityid) {
     Session session = this.sessionFactory.getCurrentSession();
     String sqlQuery = "SELECT r.reviewid, r.reviewer.userid, r.reviewer.username, r.reviewed.userid, " +
-        "r.reviewed.username, r.activity.activityname, r.communication, r.productivity, " +
-        "r.efficiency, r.openness, r.balance FROM Review r WHERE r.activity.activityid = :activityid";
+        "r.reviewed.username, r.activity.activityname, r.quality, r.collaboration, r.preference " +
+        "FROM Review r WHERE r.activity.activityid = :activityid";
     Query query = session.createQuery(sqlQuery);
     query.setParameter("activityid", activityid);
     List <Review> list = query.getResultList();

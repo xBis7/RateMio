@@ -67,9 +67,8 @@ public class ReviewController {
       produces = {"application/json"})
   @ResponseBody
   public ConfToken newReview(@RequestParam("reviewerId") long reviewerid, @RequestParam("reviewedId") long reviewedid,
-                             @RequestParam("activityId") long activityid, @RequestParam("communication") int communication,
-                             @RequestParam("productivity") int productivity, @RequestParam("efficiency") int efficiency,
-                             @RequestParam("openness") int openness, @RequestParam("balance") int balance) {
+                             @RequestParam("activityId") long activityid, @RequestParam("quality") int quality,
+                             @RequestParam("collaboration") int collaboration, @RequestParam("preference") String preference) {
     ConfToken confToken = new ConfToken(false);
 
     User reviewer = userService.getUser(reviewerid);
@@ -80,11 +79,9 @@ public class ReviewController {
     review.setReviewer(reviewer);
     review.setReviewed(reviewed);
     review.setActivity(activity);
-    review.setCommunication(communication);
-    review.setProductivity(productivity);
-    review.setEfficiency(efficiency);
-    review.setOpenness(openness);
-    review.setBalance(balance);
+    review.setQuality(quality);
+    review.setCollaboration(collaboration);
+    review.setPreference(preference);
 
     reviewService.addReview(review);
 

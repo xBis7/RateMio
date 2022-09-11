@@ -6,23 +6,24 @@ class DataService {
     return axios.post('/newUser', user);
   }
 
-  getTeamSuggestions(data) {
-    return axios.post('http://localhost:9090/matchmaking', data);
+  getTeamSuggestions(activityid) {
+    return axios.post('/matchmaking', null, {
+      params: {
+        activityid
+      }
+    });
   }
 
   newReview(reviewerId, reviewedId, activityId, 
-            communication, productivity, efficiency,
-            openness, balance) {
+            quality, collaboration, preference) {
     return axios.post('/newReview', null, {
       params: {
         reviewerId,
         reviewedId,
         activityId,
-        communication,
-        productivity,
-        efficiency,
-        openness,
-        balance
+        quality, 
+        collaboration, 
+        preference
       }
     });
   }

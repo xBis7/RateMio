@@ -31,20 +31,14 @@ public class Review {
   @JoinColumn(name = "activityid")
   private Activity activity;
 
-  @Column(name = "communication")
-  private int communication;
+  @Column(name = "quality")
+  private int quality;
 
-  @Column(name = "productivity")
-  private int productivity;
+  @Column(name = "collaboration")
+  private int collaboration;
 
-  @Column(name = "efficiency")
-  private int efficiency;
-
-  @Column(name = "openness")
-  private int openness;
-
-  @Column(name = "balance")
-  private int balance;
+  @Column(name = "preference")
+  private String preference;
 
   public Review() {
     super();
@@ -52,18 +46,16 @@ public class Review {
 
   public Review(long reviewid, User reviewer,
                 User reviewed, Activity activity,
-                int communication, int productivity,
-                int efficiency, int openness, int balance) {
+                int quality, int collaboration,
+                String preference) {
     super();
     this.reviewid = reviewid;
     this.reviewer = reviewer;
     this.reviewed = reviewed;
     this.activity = activity;
-    this.communication = communication;
-    this.productivity = productivity;
-    this.efficiency = efficiency;
-    this.openness = openness;
-    this.balance = balance;
+    this.quality = quality;
+    this.collaboration = collaboration;
+    this.preference = preference;
   }
 
   public long getReviewid() {
@@ -98,43 +90,27 @@ public class Review {
     this.activity = activity;
   }
 
-  public int getCommunication() {
-    return communication;
+  public int getQuality() {
+    return quality;
   }
 
-  public void setCommunication(int communication) {
-    this.communication = communication;
+  public void setQuality(int quality) {
+    this.quality = quality;
   }
 
-  public int getProductivity() {
-    return productivity;
+  public int getCollaboration() {
+    return collaboration;
   }
 
-  public void setProductivity(int productivity) {
-    this.productivity = productivity;
+  public void setCollaboration(int collaboration) {
+    this.collaboration = collaboration;
   }
 
-  public int getEfficiency() {
-    return efficiency;
+  public String getPreference() {
+    return preference;
   }
 
-  public void setEfficiency(int efficiency) {
-    this.efficiency = efficiency;
-  }
-
-  public int getOpenness() {
-    return openness;
-  }
-
-  public void setOpenness(int openness) {
-    this.openness = openness;
-  }
-
-  public int getBalance() {
-    return balance;
-  }
-
-  public void setBalance(int balance) {
-    this.balance = balance;
+  public void setPreference(String preference) {
+    this.preference = preference;
   }
 }

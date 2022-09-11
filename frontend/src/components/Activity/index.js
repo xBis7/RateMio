@@ -28,18 +28,14 @@ export default function Activity() {
   const [currReviewedId, setCurrReviewedId] = useState();
   
   // review buttons values
-  const [communication, setCommunication] = useState(3);
-  const [productivity, setProductivity] = useState(3);
-  const [efficiency, setEfficiency] = useState(3);
-  const [openness, setOpenness] = useState(3);
-  const [balance, setBalance] = useState(3);
+  const [quality, setQuality] = useState(3);
+  const [collaboration, setCollaboration] = useState(3);
+  const [preference, setPreference] = useState('neutral');
 
   // review buttons are checked
-  const [communicationChecked, setCommunicationChecked] = useState(false);
-  const [productivityChecked, setProductivityChecked] = useState(false);
-  const [efficiencyChecked, setEfficiencyChecked] = useState(false);
-  const [opennessChecked, setOpennessChecked] = useState(false);
-  const [balanceChecked, setBalanceChecked] = useState(false);
+  const [qualityChecked, setQualityChecked] = useState(false);
+  const [collaborationChecked, setCollaborationChecked] = useState(false);
+  const [preferenceChecked, setPreferenceChecked] = useState(false);
 
   const [errMessage, setErrMessage] = useState('');
   const { activityid } = useParams();
@@ -155,21 +151,15 @@ export default function Activity() {
 
   const getTeamSuggestions = async () => {
 
-//    const data = require('../../resources/test.json');
     // 0 reviewid 
     // 1 reviewer userid
     // 2 reviewer username
     // 3 reviewed userid
     // 4 reviewed username
     // 5 activityName
-    // 6 communication
-    // 7 productivity
-    // 8 efficiency
-    // 9 openness
-    // 10 balance
-
-    // quality         (productivity, efficiency)
-    // cooperation     (communication, openess, balance)
+    // 6 quality
+    // 7 collaboration
+    // 8 preference
 
     var object = {};
     object["userGlobalScores"] = [];
@@ -234,7 +224,9 @@ export default function Activity() {
     var jsonReviews = JSON.stringify(object);
     //alert(jsonReviews);
 
-    DataService.getTeamSuggestions(jsonReviews)
+    const id = {activityid};
+
+    DataService.getTeamSuggestions(id.activityid)
     .then(response => {
       //alert(JSON.stringify(response.data));
       setNewTeams(response.data);
@@ -273,8 +265,7 @@ export default function Activity() {
     const id = {activityid};
 
     DataService.newReview(currReviewerId, currReviewedId, id.activityid, 
-                          communication, productivity, efficiency,
-                          openness, balance)
+                          quality, collaboration, preference)
       .then(response => {
         if(JSON.stringify(response.data.success) === 'true') {
           alert('Review was submitted successfully!');
@@ -294,8 +285,8 @@ export default function Activity() {
 
     // check number of members
     for (let i=0; i<jsonTeams.length; i++) {
-      if (jsonTeams[i].length === 1) {
-        alert('All teams must have more than one member to request reviews');
+      if (jsonTeams[i].length !== 2) {
+        alert('All teams must have two members to request reviews');
         // exit function
         return;
       }
@@ -670,11 +661,9 @@ export default function Activity() {
                 <tr>
                   <th>Reviewer</th>
                   <th>Left review to</th>
-                  <th>Communication</th>
-                  <th>Productivity</th>
-                  <th>Efficiency</th>
-                  <th>Openness</th>
-                  <th>Balance</th>
+                  <th>Quality</th>
+                  <th>Collaboration</th>
+                  <th>Preference</th>
                 </tr>
                 {Object.values(reviews).map((item) => (
                   <tr>
@@ -683,8 +672,6 @@ export default function Activity() {
                     <td>{item[6]}</td>
                     <td>{item[7]}</td>
                     <td>{item[8]}</td>
-                    <td>{item[9]}</td>
-                    <td>{item[10]}</td>
                   </tr>
                 ))}
               </tbody>
@@ -730,30 +717,22 @@ export default function Activity() {
       {leaveReview === true && 
         <div className="review">
           <p>
-            Please rate the following statements on a scale of 1 to 5.
-            <br/>
-            1 - Strongly Disagree
-            <br/>
-            2 - Somewhat Disagree
-            <br/>
-            3 - Neither Agree Nor Disagree
-            <br/>
-            4 - Somewhat Agree
-            <br/>
-            5 - Strongly Agree
+            Please rate the following statements on a scale of 1 to 5
+            <br/> 
+            and declare your future preference.
           </p>
           <br/>
-          <p>There was great communication during our collaboration.</p>
+          <p>Quality of the partnership.</p>
 
-          <ToggleButtonGroup className="communication" type="radio" name="group1">
+          <ToggleButtonGroup className="quality" type="radio" name="group1">
             <ToggleButton 
-              id="communication1"
+              id="quality1"
               variant="outline-secondary"
-              checked={communicationChecked}
+              checked={qualityChecked}
               value={1}
               onChange={(e) => {
-                setCommunicationChecked(e.currentTarget.checked); 
-                setCommunication(e.currentTarget.value);
+                setQualityChecked(e.currentTarget.checked); 
+                setQuality(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -763,13 +742,13 @@ export default function Activity() {
             </ToggleButton>
               
             <ToggleButton 
-              id="communication2"
+              id="quality2"
               variant="outline-secondary"
-              checked={communicationChecked}
+              checked={qualityChecked}
               value={2}
               onChange={(e) => {
-                setCommunicationChecked(e.currentTarget.checked); 
-                setCommunication(e.currentTarget.value);
+                setQualityChecked(e.currentTarget.checked); 
+                setQuality(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -779,13 +758,13 @@ export default function Activity() {
             </ToggleButton>
               
             <ToggleButton 
-              id="communication3"
+              id="quality3"
               variant="outline-secondary"
-              checked={communicationChecked}
+              checked={qualityChecked}
               value={3}
               onChange={(e) => {
-                setCommunicationChecked(e.currentTarget.checked); 
-                setCommunication(e.currentTarget.value);
+                setQualityChecked(e.currentTarget.checked); 
+                setQuality(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -795,13 +774,13 @@ export default function Activity() {
             </ToggleButton>
               
             <ToggleButton 
-              id="communication4"
+              id="quality4"
               variant="outline-secondary"
-              checked={communicationChecked}
+              checked={qualityChecked}
               value={4}
               onChange={(e) => {
-                setCommunicationChecked(e.currentTarget.checked); 
-                setCommunication(e.currentTarget.value);
+                setQualityChecked(e.currentTarget.checked); 
+                setQuality(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -811,13 +790,13 @@ export default function Activity() {
             </ToggleButton>
               
             <ToggleButton
-              id="communication5"
+              id="quality5"
               variant="outline-secondary"
-              checked={communicationChecked}
+              checked={qualityChecked}
               value={5}
               onChange={(e) => {
-                setCommunicationChecked(e.currentTarget.checked); 
-                setCommunication(e.currentTarget.value);
+                setQualityChecked(e.currentTarget.checked); 
+                setQuality(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -828,17 +807,17 @@ export default function Activity() {
           </ToggleButtonGroup>
           <br/>
           <br/>
-          <p>Our collaboration was very productive.</p>
+          <p>Collaboration of your teammate.</p>
            
-          <ToggleButtonGroup className="productivity" type="radio" name="group2">
+          <ToggleButtonGroup className="collaboration" type="radio" name="group2">
             <ToggleButton 
-              id="productivity1"
+              id="collaboration1"
               variant="outline-secondary"
-              checked={productivityChecked}
+              checked={collaborationChecked}
               value={1}
               onChange={(e) => {
-                setProductivityChecked(e.currentTarget.checked); 
-                setProductivity(e.currentTarget.value);
+                setCollaborationChecked(e.currentTarget.checked); 
+                setCollaboration(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -848,13 +827,13 @@ export default function Activity() {
             </ToggleButton>
             
             <ToggleButton 
-              id="productivity2"
+              id="collaboration2"
               variant="outline-secondary"
-              checked={productivityChecked}
+              checked={collaborationChecked}
               value={2}
               onChange={(e) => {
-                setProductivityChecked(e.currentTarget.checked); 
-                setProductivity(e.currentTarget.value);
+                setCollaborationChecked(e.currentTarget.checked); 
+                setCollaboration(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -864,13 +843,13 @@ export default function Activity() {
             </ToggleButton>
               
             <ToggleButton 
-              id="productivity3"
+              id="collaboration3"
               variant="outline-secondary"
-              checked={productivityChecked}
+              checked={collaborationChecked}
               value={3}
               onChange={(e) => {
-                setProductivityChecked(e.currentTarget.checked); 
-                setProductivity(e.currentTarget.value);
+                setCollaborationChecked(e.currentTarget.checked); 
+                setCollaboration(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -880,13 +859,13 @@ export default function Activity() {
             </ToggleButton>
               
             <ToggleButton 
-              id="productivity4"
+              id="collaboration4"
               variant="outline-secondary"
-              checked={productivityChecked}
+              checked={collaborationChecked}
               value={4}
               onChange={(e) => {
-                setProductivityChecked(e.currentTarget.checked); 
-                setProductivity(e.currentTarget.value);
+                setCollaborationChecked(e.currentTarget.checked); 
+                setCollaboration(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -896,13 +875,13 @@ export default function Activity() {
             </ToggleButton>
               
             <ToggleButton
-              id="productivity5"
+              id="collaboration5"
               variant="outline-secondary"
-              checked={productivityChecked}
+              checked={collaborationChecked}
               value={5}
               onChange={(e) => {
-                setProductivityChecked(e.currentTarget.checked); 
-                setProductivity(e.currentTarget.value);
+                setCollaborationChecked(e.currentTarget.checked); 
+                setCollaboration(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
@@ -914,259 +893,55 @@ export default function Activity() {
             
           <br/>
           <br/>
-          <p>There was efficiency in achieving the desired outcome.</p>
+          <p>Preference regarding future collaboration.</p>
            
-          <ToggleButtonGroup className="efficiency" type="radio" name="group3">
+          <ToggleButtonGroup className="preference" type="radio" name="group3">
             <ToggleButton 
-              id="efficiency1"
+              id="preferenceY"
               variant="outline-secondary"
-              checked={efficiencyChecked}
-              value={1}
+              checked={preferenceChecked}
+              value={'yes'}
               onChange={(e) => {
-                setEfficiencyChecked(e.currentTarget.checked); 
-                setEfficiency(e.currentTarget.value);
+                setPreferenceChecked(e.currentTarget.checked); 
+                setPreference(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
               }}
               >
-              1
+              yes
             </ToggleButton>
               
             <ToggleButton 
-              id="efficiency2"
+              id="preferenceN"
               variant="outline-secondary"
-              checked={efficiencyChecked}
-              value={2}
+              checked={preferenceChecked}
+              value={'no'}
               onChange={(e) => {
-                setEfficiencyChecked(e.currentTarget.checked); 
-                setEfficiency(e.currentTarget.value);
+                setPreferenceChecked(e.currentTarget.checked); 
+                setPreference(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
               }}
               >
-              2
+              no
             </ToggleButton>
               
             <ToggleButton 
-              id="efficiency3"
+              id="preferenceNeut"
               variant="outline-secondary"
-              checked={efficiencyChecked}
-              value={3}
+              checked={preferenceChecked}
+              value={'neutral'}
               onChange={(e) => {
-                setEfficiencyChecked(e.currentTarget.checked); 
-                setEfficiency(e.currentTarget.value);
+                setPreferenceChecked(e.currentTarget.checked); 
+                setPreference(e.currentTarget.value);
               }}
               style={{
                 margin: "5px"
               }}
               >
-              3
-            </ToggleButton>
-              
-            <ToggleButton 
-              id="efficiency4"
-              variant="outline-secondary"
-              checked={efficiencyChecked}
-              value={4}
-              onChange={(e) => {
-                setEfficiencyChecked(e.currentTarget.checked); 
-                setEfficiency(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              4
-            </ToggleButton>
-              
-            <ToggleButton
-              id="efficiency5"
-              variant="outline-secondary"
-              checked={efficiencyChecked}
-              value={5}
-              onChange={(e) => {
-                setEfficiencyChecked(e.currentTarget.checked); 
-                setEfficiency(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              5
-            </ToggleButton>
-          </ToggleButtonGroup>
-            
-          <br/>
-          <br/>
-          <p>There was an openness to new ideas or concerns.</p>
-            
-          <ToggleButtonGroup className="openness" type="radio" name="group4">
-            <ToggleButton 
-              id="openness1"
-              variant="outline-secondary"
-              checked={opennessChecked}
-              value={1}
-              onChange={(e) => {
-                setOpennessChecked(e.currentTarget.checked); 
-                setOpenness(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              1
-            </ToggleButton>
-              
-            <ToggleButton 
-              id="openness2"
-              variant="outline-secondary"
-              checked={opennessChecked}
-              value={2}
-              onChange={(e) => {
-                setOpennessChecked(e.currentTarget.checked); 
-                setOpenness(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              2
-            </ToggleButton>
-              
-            <ToggleButton 
-              id="openness3"
-              variant="outline-secondary"
-              checked={opennessChecked}
-              value={3}
-              onChange={(e) => {
-                setOpennessChecked(e.currentTarget.checked); 
-                setOpenness(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              3
-            </ToggleButton>
-              
-            <ToggleButton 
-              id="openness4"
-              variant="outline-secondary"
-              checked={opennessChecked}
-              value={4}
-              onChange={(e) => {
-                setOpennessChecked(e.currentTarget.checked); 
-                setOpenness(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              4
-            </ToggleButton>
-              
-            <ToggleButton
-              id="openness5"
-              variant="outline-secondary"
-              checked={opennessChecked}
-              value={5}
-              onChange={(e) => {
-                setOpennessChecked(e.currentTarget.checked); 
-                setOpenness(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              5
-            </ToggleButton>
-          </ToggleButtonGroup>
-            
-          <br/>
-          <br/>
-          <p>There was balance between our levels of expertise.</p>
-          
-          <ToggleButtonGroup className="balance" type="radio" name="group5">
-            <ToggleButton 
-              id="balance1"
-              variant="outline-secondary"
-              checked={balanceChecked}
-              value={1}
-              onChange={(e) => {
-                setBalanceChecked(e.currentTarget.checked); 
-                setBalance(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              1
-            </ToggleButton>
-              
-            <ToggleButton 
-              id="balance2"
-              variant="outline-secondary"
-              checked={balanceChecked}
-              value={2}
-              onChange={(e) => {
-                setBalanceChecked(e.currentTarget.checked); 
-                setBalance(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              2
-            </ToggleButton>
-              
-            <ToggleButton 
-              id="balance3"
-              variant="outline-secondary"
-              checked={balanceChecked}
-              value={3}
-              onChange={(e) => {
-                setBalanceChecked(e.currentTarget.checked); 
-                setBalance(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              3
-            </ToggleButton>
-              
-            <ToggleButton 
-              id="balance4"
-              variant="outline-secondary"
-              checked={balanceChecked}
-              value={4}
-              onChange={(e) => {
-                setBalanceChecked(e.currentTarget.checked); 
-                setBalance(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              4
-            </ToggleButton>
-              
-            <ToggleButton
-              id="balance5"
-              variant="outline-secondary"
-              checked={balanceChecked}
-              value={5}
-              onChange={(e) => {
-                setBalanceChecked(e.currentTarget.checked); 
-                setBalance(e.currentTarget.value);
-              }}
-              style={{
-                margin: "5px"
-              }}
-              >
-              5
+              neutral
             </ToggleButton>
           </ToggleButtonGroup>
             
