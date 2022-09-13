@@ -209,7 +209,7 @@ public class ActivityController {
 
     Activity activity = activityService.getActivityObject(activityid);
     int playerNum = activity.getMemberNum()-1;
-    List<Review> reviewList = reviewService.getAllActivityReviews(activityid);
+    List<Review> reviewList = reviewService.getAllActivityReviewsToObjects(activityid);
 
     Optimizing optimizing = new Optimizing(playerNum, reviewList);
     optimizing.initOptimization();

@@ -7,9 +7,8 @@ import java.util.List;
 public class Optimizing {
 
   public static final boolean DEBUG = true;
-
-  private int playerNum;
-  private List<Review> reviewList;
+  private final int playerNum;
+  private final List<Review> reviewList;
 
   public Optimizing(int playerNum, List<Review> reviewList) {
     this.playerNum = playerNum;
@@ -17,19 +16,16 @@ public class Optimizing {
   }
 
   public void initOptimization() {
-    Game game = new Game(playerNum);
+    Game game = new Game(playerNum, reviewList);
     Matchmaking matchmaking = new Matchmaking(game);
 
-    for (int rounds = 0; rounds < 5; rounds++) {
-      System.out.println("--------------------");
-      System.out.println("Round " + rounds);
-      System.out.println("--------------------");
+    // get original teams
+    Teams teams = matchmaking.run();
 
-      Teams teams = matchmaking.run();
-      game.iteration(teams);
+    // iterate to get ratings
+    game.iteration(teams);
 
-      System.out.println("--------------------");
-      System.out.println();
-    }
+    // get new teams
+    matchmaking.run();
   }
 }

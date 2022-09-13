@@ -12,6 +12,8 @@ public interface ReviewService {
 
   public List<Review> getAllActivityReviews(long activityid);
 
+  public List<Review> getAllActivityReviewsToObjects(long activityid);
+
   public Review getReview(long reviewId);
 
   public Review addReview(Review review);

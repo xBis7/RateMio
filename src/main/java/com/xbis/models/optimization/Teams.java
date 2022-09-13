@@ -5,7 +5,7 @@ import gurobi.GRBException;
 import gurobi.GRBVar;
 
 public class Teams {
-  private final int players;
+  private final int playerNum;
   private final int teamSize;
 
   private float[][] U;
@@ -13,13 +13,13 @@ public class Teams {
   private boolean[][] teams;
 
   public Teams(GRBVar[][] X, float[][] U, int N, int teamSize) throws GRBException {
-    this.players = N;
+    this.playerNum = N;
     this.teamSize = teamSize;
     this.U = U;
 
-    teams = new boolean[players][players];
-    for (int i = 0; i < players; i++) {
-      for (int j = 0; j < players; j++) {
+    teams = new boolean[playerNum][playerNum];
+    for (int i = 0; i < playerNum; i++) {
+      for (int j = 0; j < playerNum; j++) {
         teams[i][j] = X[i][j].get(GRB.DoubleAttr.X) > 0.0;
       }
     }
@@ -30,13 +30,13 @@ public class Teams {
 
     sb.append("Teams:\n");
 
-    // Initialize all players to not mentioned
-    boolean[] mentioned = new boolean[players];
-    for (int i = 0; i < players; i++) {
+    // Initialize all playerNum to not mentioned
+    boolean[] mentioned = new boolean[playerNum];
+    for (int i = 0; i < playerNum; i++) {
       mentioned[i] = false;
     }
 
-    for (int i = 0; i < players; i++) {
+    for (int i = 0; i < playerNum; i++) {
       // Only print player team if not mentioned yet
       if (mentioned[i]) {
         continue;
@@ -84,7 +84,7 @@ public class Teams {
 
     int idx = 1;
     team[0] = player;
-    for (int j = 0; j < players; j++) {
+    for (int j = 0; j < playerNum; j++) {
       if (this.teams[player][j]) {
         team[idx] = j;
         idx++;
@@ -101,7 +101,7 @@ public class Teams {
   public int[] getTeammates(int player) {
     int[] teammates = new int[teamSize - 1];
     int idx = 0;
-    for (int j = 0; j < players; j++) {
+    for (int j = 0; j < playerNum; j++) {
       if (this.teams[player][j]) {
         teammates[idx] = j;
         idx++;
