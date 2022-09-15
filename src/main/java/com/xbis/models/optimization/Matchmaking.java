@@ -1,5 +1,6 @@
 package com.xbis.models.optimization;
 
+import com.xbis.models.Review;
 import gurobi.GRB;
 import gurobi.GRB.IntParam;
 import gurobi.GRB.StringParam;
@@ -8,6 +9,8 @@ import gurobi.GRBException;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
+
+import java.util.List;
 
 public class Matchmaking {
   // Weight factor used to give to personal score. (1 - PERSONAL_WEIGHT) will
@@ -20,15 +23,17 @@ public class Matchmaking {
 
   private final int playerNum;
   private final Game game;
+  private final List<Review> reviewList;
 
   private float L[][];
   private float agg[];
   private float U[][];
 
   // Adds context to the matchmaking from the collected ratings.
-  public Matchmaking(Game game) {
+  public Matchmaking(Game game, List<Review> reviewList) {
     this.game = game;
     this.playerNum = game.getPlayerNum();
+    this.reviewList = reviewList;
 
     L = new float[playerNum][playerNum];
     agg = new float[playerNum];
@@ -155,7 +160,7 @@ public class Matchmaking {
     // Optimize model
     model.optimize();
 
-    return new Teams(X, U, playerNum, game.getTeamSize());
+    return new Teams(X, U, playerNum, game.getTeamSize(), reviewList);
   }
 
   public Teams run() {
@@ -164,7 +169,6 @@ public class Matchmaking {
     Teams teams = null;
     try {
       teams = matchmake();
-      System.out.println(teams);
     } catch (GRBException e) {
       System.out.println("Error code: " + e.getErrorCode() + ". " +
           e.getMessage());

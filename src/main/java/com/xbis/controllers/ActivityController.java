@@ -9,6 +9,7 @@ import com.xbis.models.Review;
 import com.xbis.models.ConfToken;
 import com.xbis.models.ActivityMember;
 import com.xbis.models.optimization.Optimizing;
+import com.xbis.models.optimization.TeamModel;
 import com.xbis.services.UserService;
 import com.xbis.services.ActivityService;
 import com.xbis.services.ReviewService;
@@ -205,15 +206,20 @@ public class ActivityController {
   @RequestMapping(value = "/matchmaking", method = RequestMethod.POST,
       consumes = {"application/json"})
   @ResponseBody
-  public String matchmaking(@RequestParam("activityid") long activityid) {
+  public String matchmaking(@RequestParam("activityid") long activityid)
+      throws JsonProcessingException {
 
     Activity activity = activityService.getActivityObject(activityid);
     int playerNum = activity.getMemberNum()-1;
     List<Review> reviewList = reviewService.getAllActivityReviewsToObjects(activityid);
 
     Optimizing optimizing = new Optimizing(playerNum, reviewList);
-    optimizing.initOptimization();
+    List<TeamModel> teamModelList = optimizing.initOptimization();
 
-    return null;
+    ObjectMapper mapper = new ObjectMapper();
+
+    String list = mapper.writeValueAsString(teamModelList);
+
+    return list;
   }
 }

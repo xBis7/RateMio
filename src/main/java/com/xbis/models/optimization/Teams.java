@@ -1,70 +1,73 @@
 package com.xbis.models.optimization;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import com.xbis.models.Review;
 import gurobi.GRB;
 import gurobi.GRBException;
 import gurobi.GRBVar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Teams {
   private final int playerNum;
   private final int teamSize;
+  private final List<Review> reviewList;
+  private List<TeamModel> teamModelList;
 
   private float[][] U;
 
   private boolean[][] teams;
 
-  public Teams(GRBVar[][] X, float[][] U, int N, int teamSize) throws GRBException {
+  private static final Logger LOG =
+      LoggerFactory.getLogger(Teams.class);
+
+  public Teams(GRBVar[][] X, float[][] U, int N,
+               int teamSize, List<Review> reviewList) {
     this.playerNum = N;
     this.teamSize = teamSize;
     this.U = U;
+    this.teamModelList = new ArrayList<>();
+    this.reviewList = reviewList;
 
     teams = new boolean[playerNum][playerNum];
     for (int i = 0; i < playerNum; i++) {
       for (int j = 0; j < playerNum; j++) {
-        teams[i][j] = X[i][j].get(GRB.DoubleAttr.X) > 0.0;
+        try {
+          teams[i][j] = X[i][j].get(GRB.DoubleAttr.X) > 0.0;
+        } catch (GRBException e) {
+          LOG.error("{} in the constructor of class Teams", e);
+        }
       }
     }
   }
 
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-
-    sb.append("Teams:\n");
-
-    // Initialize all playerNum to not mentioned
-    boolean[] mentioned = new boolean[playerNum];
-    for (int i = 0; i < playerNum; i++) {
-      mentioned[i] = false;
-    }
+  public List<TeamModel> getTeams() {
+    List<String> players = new ArrayList<>();
 
     for (int i = 0; i < playerNum; i++) {
-      // Only print player team if not mentioned yet
-      if (mentioned[i]) {
-        continue;
-      }
-      // Mark self as mentioned
-      mentioned[i] = true;
-
       int[] teammates = getTeammates(i);
       // Check if player has teammates
       if (teammates.length == 0) {
-        sb.append("Player " + i + " is not in a team\n");
         continue;
       }
 
-      // Print teammates
-      sb.append("(" + i);
-      for (int teammate : teammates) {
-        sb.append(", " + teammate);
-        // Mark teammates as mentioned
-        mentioned[teammate] = true;
+      String username1 = reviewList.get(i).getReviewer().getUsername();
+      String username2 = reviewList.get(i).getReviewed().getUsername();
+
+      if (!(players.contains(username1) || players.contains(username2))) {
+        players.add(username1);
+        players.add(username2);
+
+        // Calculate whole team affinity
+        float affinity = getTeamAffinity(getTeam(i));
+
+        TeamModel teamModel = new TeamModel(username1, username2, affinity);
+        teamModelList.add(teamModel);
       }
-
-      // Calculate whole team affinity
-      float affinity = getTeamAffinity(getTeam(i));
-      sb.append(") -> " + affinity + "\n");
     }
-
-    return sb.toString();
+    return teamModelList;
   }
 
   public float getTeamAffinity(int[] team) {

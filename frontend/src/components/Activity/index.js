@@ -641,8 +641,8 @@ export default function Activity() {
                 {Object.values(newTeams).map((item, index) => (
                   <tr>
                     <td>{index+1}</td>
-                    <td>{item.user1}</td>
-                    <td>{item.user2}</td>
+                    <td>{item.username1}</td>
+                    <td>{item.username2}</td>
                   </tr>
                 ))}
               </tbody>
