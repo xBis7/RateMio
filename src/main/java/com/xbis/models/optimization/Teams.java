@@ -56,12 +56,15 @@ public class Teams {
       String username1 = reviewList.get(i).getReviewer().getUsername();
       String username2 = reviewList.get(i).getReviewed().getUsername();
 
-      if (!(players.contains(username1) || players.contains(username2))) {
+      // Calculate whole team affinity
+      float affinity = getTeamAffinity(getTeam(i));
+
+      if (!players.contains(username1) &&
+          !players.contains(username2) &&
+          !players.contains(String.valueOf(affinity))) {
         players.add(username1);
         players.add(username2);
-
-        // Calculate whole team affinity
-        float affinity = getTeamAffinity(getTeam(i));
+        players.add(String.valueOf(affinity));
 
         TeamModel teamModel = new TeamModel(username1, username2, affinity);
         teamModelList.add(teamModel);

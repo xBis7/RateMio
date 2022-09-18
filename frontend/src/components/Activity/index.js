@@ -141,11 +141,11 @@ export default function Activity() {
   }
 
   const checkForTeams = async () => {
-    if(members.length >= 4) {
+    if(members.length === 4) {
       setDisplayTeamMaker(true);
       getMembers();
     } else {
-      alert('Activity members must be at least 4 to create teams');
+      alert('Activity members must be 4 to create teams');
     }
   }
 

@@ -3,9 +3,7 @@ package com.xbis.models.optimization;
 public class TeamModel {
 
   private String username1;
-
   private String username2;
-
   private float teamRating;
 
   public TeamModel(String username1, String username2,
