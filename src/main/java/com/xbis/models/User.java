@@ -34,25 +34,28 @@ public class User {
   @Column(name = "accesslevel")
   private int accessLevel;
 
-  @OneToMany(mappedBy = "receiver", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "receiver", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<Request> reqReceiverList;
 
-  @OneToMany(mappedBy = "sender", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "sender", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<Request> reqSenderList;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<Activity> activityList;
 
-  @OneToMany(mappedBy = "reviewer", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
+  private List<ActivityMember> activityMembersList;
+
+  @OneToMany(mappedBy = "reviewer", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<Review> reviewerList;
 
-  @OneToMany(mappedBy = "reviewed", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "reviewed", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<Review> reviewedList;
 
-  @OneToMany(mappedBy = "reviewer", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "reviewer", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<PendingReview> pendReviewerList;
 
-  @OneToMany(mappedBy = "reviewed", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "reviewed", cascade = {CascadeType.MERGE, CascadeType.REMOVE })
   private List<PendingReview> pendReviewedList;
 
   public User() {
@@ -100,6 +103,14 @@ public class User {
 
   public void setActivityList(List<Activity> activityList) {
     this.activityList = activityList;
+  }
+
+  public List<ActivityMember> getActivityMembersList() {
+    return activityMembersList;
+  }
+
+  public void setActivityMembersList(List<ActivityMember> activityMembersList) {
+    this.activityMembersList = activityMembersList;
   }
 
   public List<Review> getReviewerList() {
