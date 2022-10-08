@@ -54,7 +54,8 @@ public class MainController {
 
   /**
    * Redundant
-   * Keep it just for userLogout() call.
+   * Keep it just for userLogout() call in case we need
+   * to clear the active user list, used for authentication.
    * @return a redirect
    */
   @RequestMapping(value="/logout", method = RequestMethod.GET)
