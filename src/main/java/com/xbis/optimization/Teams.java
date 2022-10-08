@@ -1,4 +1,4 @@
-package com.xbis.models.optimization;
+package com.xbis.optimization;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;

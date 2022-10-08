@@ -1,4 +1,4 @@
-package com.xbis.models.optimization;
+package com.xbis.optimization;
 
 public class Preference {
   public static final float NEUTRAL = 1.0f;

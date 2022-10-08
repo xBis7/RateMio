@@ -1,4 +1,4 @@
-package com.xbis.models.optimization;
+package com.xbis.optimization;
 
 public class TeamModel {
 
