@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -37,10 +38,10 @@ public class ReviewController {
   @Autowired
   PendingReviewService pendingReviewService;
 
-  @RequestMapping(value = "/getAllReviewerPendingReviews", method = RequestMethod.GET,
+  @RequestMapping(value = "/users/{reviewerid}/pendingReviews", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllReviewerPendingReviews(@RequestParam("reviewerid") long reviewerid)
+  public String getAllReviewerPendingReviews(@PathVariable("reviewerid") long reviewerid)
       throws JsonProcessingException {
     List<PendingReview> pendingReviewList = pendingReviewService.getAllReviewerPendingReviews(reviewerid);
     ObjectMapper mapper = new ObjectMapper();
@@ -50,10 +51,10 @@ public class ReviewController {
     return list;
   }
 
-  @RequestMapping(value = "/getAllReviewerReviews", method = RequestMethod.GET,
+  @RequestMapping(value = "/users/{reviewerid}/reviews", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllReviewerReviews(@RequestParam("reviewerid") long reviewerid)
+  public String getAllReviewerReviews(@PathVariable("reviewerid") long reviewerid)
       throws JsonProcessingException {
     List<Review> reviewList = reviewService.getAllReviewerReviews(reviewerid);
     ObjectMapper mapper = new ObjectMapper();
@@ -63,7 +64,7 @@ public class ReviewController {
     return list;
   }
 
-  @RequestMapping(value = "/newReview", method = RequestMethod.POST,
+  @RequestMapping(value = "/reviews/new", method = RequestMethod.POST,
       produces = {"application/json"})
   @ResponseBody
   public ConfToken newReview(@RequestParam("reviewerId") long reviewerid, @RequestParam("reviewedId") long reviewedid,
@@ -95,7 +96,7 @@ public class ReviewController {
     return confToken;
   }
 
-  @RequestMapping(value = "/getAllPendingReviews", method = RequestMethod.GET,
+  @RequestMapping(value = "/pendingReviews", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
   public String getAllPendingReviews() throws JsonProcessingException {
@@ -107,10 +108,10 @@ public class ReviewController {
     return list;
   }
 
-  @RequestMapping(value = "/getActivityPendingReviews", method = RequestMethod.GET,
+  @RequestMapping(value = "/activities/{activityid}/pendingReviews", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getActivityPendingReviews(@RequestParam("activityid") long activityid)
+  public String getActivityPendingReviews(@PathVariable("activityid") long activityid)
       throws JsonProcessingException {
     List <PendingReview> pendingReviewList =
         pendingReviewService.getAllActivityPendingReviews(activityid);
@@ -121,10 +122,10 @@ public class ReviewController {
     return list;
   }
 
-  @RequestMapping(value = "/getActivityReviews", method = RequestMethod.GET,
+  @RequestMapping(value = "/activities/{activityid}/reviews", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getActivityReviews(@RequestParam("activityid") long activityid)
+  public String getActivityReviews(@PathVariable("activityid") long activityid)
       throws JsonProcessingException {
     List <Review> reviewList = reviewService.getAllActivityReviews(activityid);
     ObjectMapper mapper = new ObjectMapper();

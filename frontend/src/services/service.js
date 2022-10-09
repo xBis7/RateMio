@@ -3,20 +3,16 @@ import axios from '../api/axios';
 class DataService {
 
   register(user) {
-    return axios.post('/newUser', user);
+    return axios.post('/users/new', user);
   }
 
   getTeamSuggestions(activityid) {
-    return axios.post('/matchmaking', null, {
-      params: {
-        activityid
-      }
-    });
+    return axios.get(`/activities/${activityid}/matchmaking`);
   }
 
   newReview(reviewerId, reviewedId, activityId, 
             quality, collaboration, preference) {
-    return axios.post('/newReview', null, {
+    return axios.post('/reviews/new', null, {
       params: {
         reviewerId,
         reviewedId,
@@ -29,7 +25,7 @@ class DataService {
   }
 
   newAccessRequest(id, reqType) {
-    return axios.post('/newAccessRequest', null, {
+    return axios.post(`users/${id}/requests`, null, {
       params: {
         id,
         reqType
@@ -38,7 +34,7 @@ class DataService {
   }
 
   newPendingReviewRequest(reviewerid, reviewedid, activityid) {
-    return axios.post('/newPendingReviewRequest', null, {
+    return axios.post('/pendingReviews/new', null, {
       params: {
         reviewerid,
         reviewedid,
@@ -57,7 +53,7 @@ class DataService {
   }
 
   addActivityMember(userid, activityid) {
-    return axios.post('/addActivityMember', null, {
+    return axios.post('/activityMembers/new', null, {
       params: {
         userid,
         activityid
@@ -66,71 +62,43 @@ class DataService {
   }
 
   login(user) {
-    return axios.post('/userAuth', user);
+    return axios.post('/users/userAuth', user);
   }
 
   getUser(id) {
-    return axios.get('/getUser', {
-      params: {
-        id
-      }
-    });
+    return axios.get(`/users/${id}`);
   }
 
   getAllUsers(id) {
-    return axios.get('/getAllUsers', {
-      params: {
-        id
-      }
-    });
+    return axios.get(`/users/id!=${id}`);
   } 
 
   getAllUsersNonAdminNonMember(activityid) {
-    return axios.get('/getAllUsersNonAdminNonMember', {
-      params: {
-        activityid
-      }
-    });
+    return axios.get(`/activities/${activityid}/users`);
   } 
 
   getAllAccessRequests() {
-    return axios.get('/getAllAccessRequests');
+    return axios.get('/requests/access');
   } 
 
   getAllPendingReviews() {
-    return axios.get('/getAllPendingReviews');
+    return axios.get('/pendingReviews');
   }
 
   getActivityPendingReviews(activityid) {
-    return axios.get('/getActivityPendingReviews', {
-      params: {
-        activityid
-      }
-    });
+    return axios.get(`/activities/${activityid}/pendingReviews`);
   }
 
   getActivityReviews(activityid) {
-    return axios.get('/getActivityReviews', {
-      params: {
-        activityid
-      }
-    });
+    return axios.get(`/activities/${activityid}/reviews`);
   }
 
   getAllReviewerReviews(reviewerid) {
-    return axios.get('/getAllReviewerReviews', {
-      params: {
-        reviewerid
-      }
-    });
+    return axios.get(`/users/${reviewerid}/reviews`);
   }
 
   getAllUserActivities(userid) {
-    return axios.get('/getAllUserActivities', {
-      params: {
-        userid
-      }
-    });
+    return axios.get(`/users/${userid}/activities`);
   }
 
   getActivity(activityid) {
@@ -142,60 +110,37 @@ class DataService {
   }
 
   getAllReviewerPendingReviews(reviewerid) {
-    return axios.get('/getAllReviewerPendingReviews', {
-      params: {
-        reviewerid
-      }
-    });
+    return axios.get(`/users/${reviewerid}/pendingReviews`);
   }
 
   getAllActivityUsers(ownerid, activityid) {
-    return axios.get('/getAllActivityUsers', {
+    return axios.get(`/activities/${activityid}/users`, {
       params: {
-        ownerid,
-        activityid
+        ownerid
       }
     });
   }
 
   deleteUser(id) {
-    return axios.delete('/deleteUser', {
-      params: {
-        id
-      }
-    });
+    return axios.delete(`/users/${id}`);
   }
 
   deleteRequest(id) {
-    return axios.delete('/deleteRequest', {
-      params: {
-        id
-      }
-    });
+    return axios.delete(`/requests/${id}`);
   }
 
   deleteActivity(activityid) {
-    return axios.delete('/deleteActivity', {
-      params: {
-        activityid
-      }
-    });
+    return axios.delete(`/activities/${activityid}`);
   }
 
   removeActivityMember(userid, activityid) {
-    return axios.delete('/removeActivityMember', {
-      params: {
-        userid, 
-        activityid
-      }
-    });
+    return axios.delete(`/activities/${activityid}/activityMembers/${userid}`);
   }
 
   //axios.put(url[, data[, config]])
   updateUserAccess(id, level) {
-    return axios.put('/updateAccess', null, {
+    return axios.put(`/users/${id}/access`, null, {
       params: {
-        id,
         level
       }
     });

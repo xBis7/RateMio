@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -87,10 +88,10 @@ public class ActivityController {
     return list;
   }
 
-  @RequestMapping(value = "/getAllUserActivities", method = RequestMethod.GET,
+  @RequestMapping(value = "/users/{userid}/activities", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllUserActivities(@RequestParam("userid") long id)
+  public String getAllUserActivities(@PathVariable("userid") long id)
       throws JsonProcessingException {
     List<Activity> activityList = activityService.getAllUserActivities(id);
     ObjectMapper mapper = new ObjectMapper();
@@ -100,11 +101,11 @@ public class ActivityController {
     return list;
   }
 
-  @RequestMapping(value = "/getAllActivityUsers", method = RequestMethod.GET,
+  @RequestMapping(value = "/activities/{activityid}/users", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
   public String getAllActivityUsers(@RequestParam("ownerid") long ownerid,
-                                    @RequestParam("activityid") long activityid)
+                                    @PathVariable("activityid") long activityid)
       throws JsonProcessingException {
     List<User> userList = activityService.getAllActivityUsers(ownerid, activityid);
     ObjectMapper mapper = new ObjectMapper();
@@ -114,10 +115,10 @@ public class ActivityController {
     return list;
   }
 
-  @RequestMapping(value = "/deleteActivity", method = RequestMethod.DELETE,
+  @RequestMapping(value = "/activities/{activityid}", method = RequestMethod.DELETE,
       produces = {"application/json"})
   @ResponseBody
-  public ConfToken deleteActivity(@RequestParam("activityid") long activityid) {
+  public ConfToken deleteActivity(@PathVariable("activityid") long activityid) {
     ConfToken confToken = new ConfToken(false);
 
     activityService.deleteActivity(activityid);
@@ -126,7 +127,7 @@ public class ActivityController {
     return confToken;
   }
 
-  @RequestMapping(value = "/addActivityMember", method = RequestMethod.POST,
+  @RequestMapping(value = "/activityMembers/new", method = RequestMethod.POST,
       consumes = {"application/json"},
       produces = {"application/json"})
   @ResponseBody
@@ -150,11 +151,12 @@ public class ActivityController {
     return confToken;
   }
 
-  @RequestMapping(value = "/removeActivityMember", method = RequestMethod.DELETE,
+  @RequestMapping(value = "/activities/{activityid}/activityMembers/{userid}",
+      method = RequestMethod.DELETE,
       produces = {"application/json"})
   @ResponseBody
-  public ConfToken removeActivityMember(@RequestParam("userid") long userid,
-                                        @RequestParam("activityid") long activityid) {
+  public ConfToken removeActivityMember(@PathVariable("userid") long userid,
+                                        @PathVariable("activityid") long activityid) {
     ConfToken confToken = new ConfToken(false);
 
     Activity activity = activityService.getActivityObject(activityid);
@@ -166,10 +168,10 @@ public class ActivityController {
     return confToken;
   }
 
-  @RequestMapping(value = "/getAllUsersNonAdminNonMember", method = RequestMethod.GET,
+  @RequestMapping(value = "/activities/{activityid}/users", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllUsersNonAdminNonMember(@RequestParam("activityid") long activityId)
+  public String getAllUsersNonAdminNonMember(@PathVariable("activityid") long activityId)
       throws JsonProcessingException {
     List<User> userList = activityService.getAllUsersNonAdminNonMember(activityId);
     ObjectMapper mapper = new ObjectMapper();
@@ -179,7 +181,7 @@ public class ActivityController {
     return list;
   }
 
-  @RequestMapping(value = "/newPendingReviewRequest", method = RequestMethod.POST,
+  @RequestMapping(value = "/pendingReviews/new", method = RequestMethod.POST,
       consumes = {"application/json"},
       produces = {"application/json"})
   @ResponseBody
@@ -203,10 +205,9 @@ public class ActivityController {
     return confToken;
   }
 
-  @RequestMapping(value = "/matchmaking", method = RequestMethod.POST,
-      consumes = {"application/json"})
+  @RequestMapping(value = "/activities/{activityid}/matchmaking", method = RequestMethod.GET)
   @ResponseBody
-  public String matchmaking(@RequestParam("activityid") long activityid)
+  public String matchmaking(@PathVariable("activityid") long activityid)
       throws JsonProcessingException {
 
     Activity activity = activityService.getActivityObject(activityid);

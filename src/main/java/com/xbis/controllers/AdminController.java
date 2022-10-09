@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -28,10 +29,10 @@ public class AdminController {
   @Autowired
   RequestService requestService;
 
-  @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET,
+  @RequestMapping(value = "/users/id!={id}", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public String getAllUsers(@RequestParam("id") long currentUserId)
+  public String getAllUsers(@PathVariable("id") long currentUserId)
       throws JsonProcessingException {
     List <User> userList = userService.getAllUsers(currentUserId);
     ObjectMapper mapper = new ObjectMapper();
@@ -41,7 +42,7 @@ public class AdminController {
     return list;
   }
 
-  @RequestMapping(value = "/getAllAccessRequests", method = RequestMethod.GET,
+  @RequestMapping(value = "/requests/access", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
   public String getAllAccessRequests() throws JsonProcessingException {
@@ -53,28 +54,28 @@ public class AdminController {
     return list;
   }
 
-  @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE,
+  @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE,
       produces = {"application/json"})
   @ResponseBody
-  public ConfToken deleteUser(@RequestParam("id") long id) {
+  public ConfToken deleteUser(@PathVariable("id") long id) {
     boolean success = userService.deleteUser(id);
     ConfToken confToken = new ConfToken(success);
     return confToken;
   }
 
-  @RequestMapping(value = "/deleteRequest", method = RequestMethod.DELETE,
+  @RequestMapping(value = "/requests/{id}", method = RequestMethod.DELETE,
       produces = {"application/json"})
   @ResponseBody
-  public ConfToken deleteRequest(@RequestParam("id") long id) {
+  public ConfToken deleteRequest(@PathVariable("id") long id) {
     boolean success = requestService.deleteRequest(id);
     ConfToken confToken = new ConfToken(success);
     return confToken;
   }
 
-  @RequestMapping(value = "/updateAccess", method = RequestMethod.PUT,
+  @RequestMapping(value = "/users/{id}/access", method = RequestMethod.PUT,
       produces = {"application/json"})
   @ResponseBody
-  public ConfToken updateAccess(@RequestParam("id") long id,
+  public ConfToken updateAccess(@PathVariable("id") long id,
                                 @RequestParam("level") int level) {
     ConfToken confToken = new ConfToken(false);
     User user = userService.getUser(id);
