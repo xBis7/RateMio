@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -26,15 +25,15 @@ public class UserController {
   @Autowired
   RequestService requestService;
 
-  @RequestMapping(value = "/getUser", method = RequestMethod.GET,
+  @RequestMapping(value = "/users/{id}", method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
-  public User getUser(@RequestParam("id") long id) {
+  public User getUser(@PathVariable("id") long id) {
     User user = userService.getUser(id);
     return user;
   }
 
-  @RequestMapping(value = "/newAccessRequest", method = RequestMethod.POST,
+  @RequestMapping(value = "/users/{id}/requests", method = RequestMethod.POST,
       consumes = {"application/json"},
       produces = {"application/json"})
   @ResponseBody

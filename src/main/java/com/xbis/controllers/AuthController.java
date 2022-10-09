@@ -16,12 +16,12 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-public class MainController {
+public class AuthController {
 
   @Autowired
   UserService userService;
 
-  @RequestMapping(value= "/userAuth", method = RequestMethod.POST,
+  @RequestMapping(value= "/users/userAuth", method = RequestMethod.POST,
       consumes = {"application/json"},
       produces = {"application/json"})
   @ResponseBody
@@ -43,7 +43,7 @@ public class MainController {
     return authToken;
   }
 
-  @RequestMapping(value = "/newUser", method = RequestMethod.POST,
+  @RequestMapping(value = "/users/new", method = RequestMethod.POST,
       consumes = {"application/json"},
       produces = {"application/json"})
   @ResponseBody
@@ -51,17 +51,4 @@ public class MainController {
     userService.addUser(user);
     return user;
   }
-
-  /**
-   * Redundant
-   * Keep it just for userLogout() call in case we need
-   * to clear the active user list, used for authentication.
-   * @return a redirect
-   */
-  @RequestMapping(value="/logout", method = RequestMethod.GET)
-  public String logout() {
-    userService.userLogout();
-    return "redirect:/home";
-  }
-
 }
