@@ -1,7 +1,7 @@
 import './index.css'
 import DataService from '../../services/service';
 import React from 'react';
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
 
 export default function Register() {
