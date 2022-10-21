@@ -63,7 +63,7 @@ public class AdminController {
     return confToken;
   }
 
-  @RequestMapping(value = "/requests/{id}", method = RequestMethod.DELETE,
+  @RequestMapping(value = "/requests/access/{id}", method = RequestMethod.DELETE,
       produces = {"application/json"})
   @ResponseBody
   public ConfToken deleteRequest(@PathVariable("id") long id) {

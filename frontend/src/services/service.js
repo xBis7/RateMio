@@ -74,7 +74,7 @@ class DataService {
   } 
 
   getAllUsersNonAdminNonMember(activityid) {
-    return axios.get(`/activities/${activityid}/activityMembers`);
+    return axios.get(`/activities/${activityid}/activityNonMembers`);
   } 
 
   getAllAccessRequests() {
@@ -126,7 +126,7 @@ class DataService {
   }
 
   deleteRequest(id) {
-    return axios.delete(`/requests/${id}`);
+    return axios.delete(`/requests/access/${id}`);
   }
 
   deleteActivity(activityid) {

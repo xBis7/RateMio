@@ -168,7 +168,8 @@ public class ActivityController {
     return confToken;
   }
 
-  @RequestMapping(value = "/activities/{activityid}/activityMembers", method = RequestMethod.GET,
+  @RequestMapping(value = "/activities/{activityid}/activityNonMembers",
+      method = RequestMethod.GET,
       produces = {"application/json"})
   @ResponseBody
   public String getAllUsersNonAdminNonMember(@PathVariable("activityid") long activityId)
