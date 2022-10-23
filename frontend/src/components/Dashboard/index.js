@@ -2,7 +2,7 @@ import './index.css'
 import DataService from '../../services/service';
 import React from 'react';
 import { useState, useEffect } from "react";
-import { Button, Form, ToggleButton, ToggleButtonGroup, Table, Accordion } from 'react-bootstrap';
+import { Button, Form, ToggleButton, ToggleButtonGroup, Table, Accordion, Modal, Dropdown } from 'react-bootstrap';
 
 export default function Dashboard() {
 
@@ -16,13 +16,21 @@ export default function Dashboard() {
   const [activityOwner, setActivityOwner] = useState({});
 
   const [activityName, setActivityName] = useState('');
+  const [currActivityName, setCurrActivityName] = useState('');
+  const [currActivityId, setCurrActivityId] = useState();
+  const [tmpNewActivityId, setTmpNewActivityId] = useState(0);
+  const [members, setMembers] = useState('');
 
   const [id, setId] = useState();
   const [access, setAccess] = useState(3);
   const [errMessage, setErrMessage] = useState('');
 
   const [leaveReview, setLeaveReview] = useState(false);
+
+  const [showNewActivityModal, setShowNewActivityModal] = useState(false);
   
+  const [usersLoaded, setUsersLoaded] = useState(false);
+
   // review buttons values
   const [quality, setQuality] = useState(3);
   const [collaboration, setCollaboration] = useState(3);
@@ -36,6 +44,15 @@ export default function Dashboard() {
   const [reviewedId, setReviewedId] = useState();
   const [activityId, setActivityId] = useState();
 
+  /**
+   * activities
+   * 0 -> activityid
+   * 1 -> owner username
+   * 2 -> activityname
+   * 3 -> membernum
+   * 4 -> teamnum
+   */
+
   useEffect(() => {
     const loggedUser = localStorage.getItem('authUser');
     const user = JSON.parse(loggedUser);
@@ -48,6 +65,18 @@ export default function Dashboard() {
       getAllReviewerPendingReviews(user.userId);
     }
   }, []);
+
+  // Every time we have a new activity, refresh the member number
+  useEffect(() => {
+    if (tmpNewActivityId !== 0) {
+      refreshActivityMembers(tmpNewActivityId, members.length);
+      window.location.reload();
+    }
+  }, [tmpNewActivityId]);
+
+  useEffect(() => {
+    loadActivityMembers();
+  }, [currActivityName]);
 
   const getAllUserActivities = (currId) => {
     
@@ -100,18 +129,66 @@ export default function Dashboard() {
   }
 
   const newActivity = () => {
+      // Create new activity
+      if (activityName.length === 0) {
+        alert('Please provide an activity name to proceed.');
+      } else {
+        DataService.newActivity(id, activityName)
+        .then(response => {
+          const newActivityId = response.data.activity.activityid;
+          setTmpNewActivityId(newActivityId);
+          addMembersToNewActivity(newActivityId);
+          window.location.href = '/dashboard';
+        }).catch(err => {
+          setErrMessage('Server Error: ' + err.response.data);
+          alert(errMessage);
+        })
+      }
+  }
 
-    DataService.newActivity(id, activityName)
+  // Executes every time we load users from an activity
+  // before the new activity gets created 
+  const loadActivityMembers = () => {
+    if (currActivityName.length > 0) {
+      DataService.getAllActivityUsers(id, currActivityId)
+        .then(response => {
+          setMembers(response.data);
+        }).catch(err => {
+          setErrMessage('Server Error: ' + err.response);
+          alert(errMessage);
+        })
+    }
+  }
+
+  const addMembersToNewActivity = (newActivityId) => {
+    for (var i=0; i< members.length; i++) {
+      const memberId = members[i][0];
+      DataService.addActivityMember(memberId, newActivityId)
+        .then(response => {
+          if(JSON.stringify(response.data.success) === 'true') {
+            window.location.reload();
+          } else {
+            alert('User addition failed!');
+          } 
+        }).catch(err => {
+          setErrMessage('Server Error: ' + err.response.data);
+          alert(errMessage);
+        });
+    }
+  }
+
+  const refreshActivityMembers = (activityId, memberNum) => {
+    DataService.refreshActivityMemberNum(activityId, memberNum)
       .then(response => {
         if(JSON.stringify(response.data.success) === 'true') {
-          window.location.href = '/dashboard';
+          window.location.reload();
         } else {
-          alert('Activity creation failed!');
-        } 
+          alert('User addition failed!');
+        }
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response.data);
         alert(errMessage);
-      })
+      });
   }
 
   const showReviewSection = (reviewedUserId, activId) => {
@@ -153,6 +230,19 @@ export default function Dashboard() {
       })
   }
 
+  const showModal = () => {
+    setShowNewActivityModal(true);
+  }
+
+  const closeModal = () => {
+    setShowNewActivityModal(false);
+    setUsersLoaded(false);
+  }
+
+  const loadUsers = (activityid) => {
+    setUsersLoaded(true); 
+  }
+
   return (
     <div className='Dashboard'>
       <section>
@@ -165,28 +255,117 @@ export default function Dashboard() {
 
         {access === 2 &&
           <div className='newActivity'>
-          <Form onSubmit={newActivity} className='newActivityForm'>
+          <Form className='newActivityForm'>
             <h3>Create a new Activity</h3>
             <br/>
-            <br/>
             <Form.Group className="mb-3">
-              <Form.Label>Activity name</Form.Label>
-              <Form.Control
-                autoComplete="off"
-                value={activityName}
-                onChange={(e) => setActivityName(e.target.value)}
-                required  
-                type="text" 
-                placeholder="Enter activity name" 
-              />
+              <p>
+                You can create an empty activity with no users 
+                or add users from an existing activity.
+              </p>
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button 
+              variant="primary" 
+              onClick={showModal}
+            >
               New Activity
             </Button>
           </Form>
           </div>  
         }
-        
+
+        <Modal
+          show={showNewActivityModal}
+          onHide={closeModal}
+          backdrop="static"
+          keyboard={false}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>New Activity</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label>Activity Name</Form.Label>
+                <Form.Control
+                  autoComplete="off"
+                  value={activityName}
+                  onChange={(e) => setActivityName(e.target.value)}
+                  autoFocus  
+                  type="text" 
+                  placeholder="Enter activity name" 
+                />
+                <br/>
+                <Form.Label>Load Users From Activity</Form.Label>
+                <br/>
+                
+                {activities.length > 0 &&
+                  <Table striped>
+                  <tbody align='center'>
+                    <tr>
+                      <th>Activity Name</th>
+                      <th>Load Users</th>
+                    </tr>
+                    {Object.values(activities).map((item) => (
+                      <tr>
+                        <td>{item[2]}</td>
+                        <td>
+                          <Button 
+                            variant="secondary"
+                            disabled={usersLoaded ? true : false}
+                            onClick={() => {
+                              setCurrActivityId(item[0]);
+                              setCurrActivityName(item[2]);
+                              loadUsers();
+                            }}
+                          >
+                            Load
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  </Table>
+                }
+
+                {activities.length === 0 && 
+                  <p>
+                    This user has no activities yet.
+                  </p>
+                }
+
+                {usersLoaded === false && 
+                  <Form.Text muted>
+                  If no activity is selected, 
+                  then an empty activity with no users will be created.
+                  </Form.Text>
+                }
+
+                {usersLoaded === true &&
+                  <p>Users loaded from activity {currActivityName}</p>
+                }
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button 
+              variant="success"
+              onClick={() => {
+                newActivity();
+              }}
+            >
+              Create
+            </Button>
+            <Button 
+              variant="secondary" 
+              onClick={closeModal}
+            >
+              Cancel              
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      
         <br/>
         <br/>
         {access === 2 && 

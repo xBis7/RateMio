@@ -28,7 +28,7 @@ export default function Login() {
           alert('User Authentication failed!');
           window.location.href = '/login';
         } else {
-          alert('Successful user authentication!');
+//          alert('Successful user authentication!');
           setAuthUser(JSON.stringify(response.data));
 //          alert(authUser.userId);
           localStorage.setItem('authUser', JSON.stringify(response.data));

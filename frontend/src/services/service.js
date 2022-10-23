@@ -10,6 +10,14 @@ class DataService {
     return axios.get(`/activities/${activityid}/matchmaking`);
   }
 
+  refreshActivityMemberNum(activityid, membernum) {
+    return axios.put(`/activities/${activityid}/activityMembers/refresh`, null, {
+      params: {
+        membernum
+      }
+    });
+  }
+
   newReview(reviewerId, reviewedId, activityId, 
             quality, collaboration, preference) {
     return axios.post('/reviews/new', null, {

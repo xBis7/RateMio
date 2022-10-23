@@ -2,6 +2,7 @@ package com.xbis.services;
 
 import com.xbis.daos.ActivityDAO;
 import com.xbis.models.Activity;
+import com.xbis.models.ActivityMember;
 import com.xbis.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,14 +54,20 @@ public class ActivityServiceImpl implements ActivityService {
 
   @Override
   @Transactional
-  public Activity addActivity(Activity activity) {
-    return activityDAO.addActivity(activity);
+  public Activity addActivity(Activity activity, ActivityMember activityMember) {
+    return activityDAO.addActivity(activity, activityMember);
   }
 
   @Override
   @Transactional
   public void updateMemberNum(Activity activity, int num) {
     activityDAO.updateMemberNum(activity, num);
+  }
+
+  @Override
+  @Transactional
+  public void refreshMemberNum(Activity activity) {
+    activityDAO.refreshMemberNum(activity);
   }
 
   @Override

@@ -1,6 +1,7 @@
 package com.xbis.daos;
 
 import com.xbis.models.Activity;
+import com.xbis.models.ActivityMember;
 import com.xbis.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -99,9 +100,11 @@ public class ActivityDAOImpl implements ActivityDAO {
   }
 
   @Override
-  public Activity addActivity(Activity activity) {
+  public Activity addActivity(Activity activity,
+                              ActivityMember activityMember) {
     Session session = this.sessionFactory.getCurrentSession();
     session.persist(activity);
+    session.persist(activityMember);
     return activity;
   }
 
@@ -110,6 +113,19 @@ public class ActivityDAOImpl implements ActivityDAO {
     Session session = this.sessionFactory.getCurrentSession();
     activity.setMemberNum(num);
     session.update(activity);
+  }
+
+  @Override
+  public void refreshMemberNum(Activity activity) {
+    Session session = this.sessionFactory.getCurrentSession();
+    String sqlQuery = "UPDATE Activity ac SET ac.membernum = " +
+        "(SELECT COUNT(u.userid) FROM User u, Activity a, ActivityMember am WHERE a.activityid=:activityid AND a.activityid=am.activity.activityid AND am.user.userid=u.userid) " +
+        "WHERE ac.activityid=:activityid2";
+
+    Query query = session.createQuery(sqlQuery);
+    query.setParameter("activityid", activity.getActivityId());
+    query.setParameter("activityid2", activity.getActivityId());
+    query.executeUpdate();
   }
 
   @Override

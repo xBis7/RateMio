@@ -2,6 +2,7 @@ package com.xbis.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.xbis.models.User;
 import com.xbis.models.Activity;
 import com.xbis.models.PendingReview;
@@ -49,9 +50,9 @@ public class ActivityController {
       consumes = {"application/json"},
       produces = {"application/json"})
   @ResponseBody
-  public ConfToken newActivity(@RequestParam("ownerid") long id,
-                               @RequestParam("name") String name) {
-    ConfToken confToken = new ConfToken(false);
+  public String newActivity(@RequestParam("ownerid") long id,
+                              @RequestParam("name") String name)
+      throws JsonProcessingException {
     Activity activity = new Activity();
     User user = userService.getUser(id);
     activity.setUser(user);
@@ -65,11 +66,20 @@ public class ActivityController {
     activityMember.setActivity(activity);
     activityMember.setUser(user);
 
-    activityService.addActivity(activity);
-    activityMemberService.addActivityMember(activityMember);
+    activityService.addActivity(activity, activityMember);
 
-    confToken.setSuccess(true);
-    return confToken;
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode rootNode = mapper.createObjectNode();
+
+    ObjectNode childNode1 = mapper.createObjectNode();
+    childNode1.put("activityid", activity.getActivityId());
+
+    rootNode.set("activity", childNode1);
+
+    String jsonString = mapper.writerWithDefaultPrettyPrinter()
+        .writeValueAsString(rootNode);
+
+    return jsonString;
   }
 
   /**
@@ -165,6 +175,24 @@ public class ActivityController {
     //update activity member num
     activityService.updateMemberNum(activity, (activity.getMemberNum() - 1));
 
+    return confToken;
+  }
+
+  @RequestMapping(value = "/activities/{activityid}/activityMembers/refresh",
+      method = RequestMethod.PUT,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  public ConfToken refreshActivityMemberNum(@PathVariable("activityid") long activityid,
+                                            @RequestParam("membernum") int memberNum) {
+    ConfToken confToken = new ConfToken(false);
+
+    Activity activity = activityService.getActivityObject(activityid);
+
+    //activityService.refreshMemberNum(activity);
+
+    activityService.updateMemberNum(activity, memberNum + 1);
+
+    confToken.setSuccess(true);
     return confToken;
   }
 
