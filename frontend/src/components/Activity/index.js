@@ -3,7 +3,7 @@ import React from 'react';
 import DataService from '../../services/service';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Table, Card, Tooltip, OverlayTrigger, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
+import { Button, Table, Card, Tooltip, OverlayTrigger, ToggleButton, ToggleButtonGroup, ButtonGroup } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Activity() {
@@ -22,6 +22,9 @@ export default function Activity() {
 
   const [displayTeamMaker, setDisplayTeamMaker] = useState(false);
   const [reviewRequestsSent, setReviewRequestsSent] = useState(false);
+
+  const [teamsFromGurobi, setTeamsFromGurobi] = useState(false);
+  const [teamsFromSwagger, setTeamsFromSwagger] = useState(false);
   
   const [leaveReview, setLeaveReview] = useState(false);
   const [currReviewerId, setCurrReviewerId] = useState();
@@ -149,7 +152,7 @@ export default function Activity() {
     }
   }
 
-  const getTeamSuggestions = async () => {
+  const getTeamSuggestions = async (tool) => {
 
     // 0 reviewid 
     // 1 reviewer userid
@@ -161,80 +164,96 @@ export default function Activity() {
     // 7 collaboration
     // 8 preference
 
-    var object = {};
-    object["userGlobalScores"] = [];
-    object["userPairwiseScore"] = [];
-    object["userCollaborationIntentions"] = [];
+    if (tool === 'swagger') {
+      setTeamsFromGurobi(false);
 
-    for (var i=0; i<reviews.length; i++) {
-
-      var qualityVal = (reviews[i][7] + reviews[i][8])/2;
-      var collaborationVal = (reviews[i][6] + reviews[i][9] + reviews[i][10])/3;
-
-      var avgScore = (qualityVal + collaborationVal)/2;
-      var intentionVal;
-
-      //totalQuality - totalCollab based on userid
-      var totalQuality = 4;
-      var totalCollab = 3;
-
-      if (avgScore < 2.5) {
-        intentionVal = "dwant";
-      } else if (avgScore > 3) {
-        intentionVal = "want";
-      } else {
-        intentionVal = "idc";
-      }
-        
-      object["userGlobalScores"].push(
-        {
-          "userId": reviews[i][2],
-          "score": {
-            "quality": totalQuality,
-            "collaboration": totalCollab 
-          }
-        });
-
-      object["userPairwiseScore"].push(
-        {
-          "gradingUser": reviews[i][2],
-          "scoresGiven": [
-            {
-              "userId": reviews[i][4],
-              "score": {
-                "quality": qualityVal,
-                "collaboration": collaborationVal
+      var object = {};
+      object["userGlobalScores"] = [];
+      object["userPairwiseScore"] = [];
+      object["userCollaborationIntentions"] = [];
+  
+      for (var i=0; i<reviews.length; i++) {
+  
+        var qualityVal = (reviews[i][7] + reviews[i][8])/2;
+        var collaborationVal = (reviews[i][6] + reviews[i][9] + reviews[i][10])/3;
+  
+        var intentionVal;
+  
+        //totalQuality - totalCollab based on userid
+        var totalQuality = 4;
+        var totalCollab = 3;
+  
+        if (reviews[i][8] === 'yes') {
+          intentionVal = 'want';
+        } else if (reviews[i][8] === 'no') {
+          intentionVal = 'dwant';
+        } else {
+          intentionVal = "idc";
+        }
+          
+        object["userCollaborationIntentions"].push(
+          {
+            "gradingUser": reviews[i][2],
+            "intentions": [
+              {
+                "userId": reviews[i][4],
+                "intention": intentionVal
               }
+            ]
+          });
+        
+        object["userGlobalScores"].push(
+          {
+            "userId": reviews[i][2],
+            "score": {
+              "quality": totalQuality,
+              "collaboration": totalCollab 
             }
-          ]  
-        });
-   
-      object["userCollaborationIntentions"].push(
-        {
-          "gradingUser": reviews[i][2],
-          "intentions": [
-            {
-              "userId": reviews[i][4],
-              "intention": intentionVal
-            }
-          ]
-        });
-    } 
+          });
+  
+        object["userPairwiseScore"].push(
+          {
+            "gradingUser": reviews[i][2],
+            "scoresGiven": [
+              {
+                "userId": reviews[i][4],
+                "score": {
+                  "quality": reviews[i][6],
+                  "collaboration": reviews[i][7]
+                }
+              }
+            ]  
+          });
+      } 
+  
+      var jsonReviews = JSON.stringify(object);
+      //alert(jsonReviews);
 
-    var jsonReviews = JSON.stringify(object);
-    //alert(jsonReviews);
+      DataService.getTeamSuggestionsWithSwagger(jsonReviews)
+      .then(response => {
+        //alert(JSON.stringify(response.data));
+        setNewTeams(response.data);
+        setTeamsFromSwagger(true);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
 
-    const id = {activityid};
+    } else {
+      setTeamsFromSwagger(false);
 
-    DataService.getTeamSuggestions(id.activityid)
-    .then(response => {
-      //alert(JSON.stringify(response.data));
-      setNewTeams(response.data);
-    }).catch(err => {
-      setErrMessage('Server Error: ' + err.response.data);
-      alert(errMessage);
-    })
+      const id = {activityid};
 
+      DataService.getTeamSuggestionsWithGurobi(id.activityid)
+      .then(response => {
+        //alert(JSON.stringify(response.data));
+        setNewTeams(response.data);
+        setTeamsFromGurobi(true);
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      })
+    }
   }
 
   const removeActivityMember = async (userid) => {
@@ -476,22 +495,42 @@ export default function Activity() {
               }
 
               {(pendingReviews.length === 0 && reviews.length > 0) &&
-                <OverlayTrigger
-                  key={'right'}
-                  placement={'right'}
+
+                <ButtonGroup>
+                  <OverlayTrigger
+                    key={'bottom'}
+                    placement={'bottom'}
+                    overlay={
+                      <Tooltip id={`tooltip-${'bottom'}`}>
+                        Previous round of reviews finished
+                      </Tooltip>
+                    }
+                  >
+                    <Button variant='info' onClick={() => getTeamSuggestions('gurobi')}
+                      style={{
+                        margin: "10px"
+                      }}>
+                      Gurobi team suggestions
+                    </Button>
+                  </OverlayTrigger>
+                  <OverlayTrigger
+                  key={'bottom'}
+                  placement={'bottom'}
                   overlay={
-                    <Tooltip id={`tooltip-${'right'}`}>
+                    <Tooltip id={`tooltip-${'bottom'}`}>
                       Previous round of reviews finished
                     </Tooltip>
                   }
                 >
-                  <Button variant='info' onClick={getTeamSuggestions}
+                  <Button variant='info' onClick={() => getTeamSuggestions('swagger')}
                     style={{
                       margin: "10px"
                     }}>
-                    Get team suggestions
+                    Swagger team suggestions
                   </Button>
                 </OverlayTrigger>
+                </ButtonGroup>
+                
               }
             </div>
           } 
@@ -626,10 +665,10 @@ export default function Activity() {
           </div>
         }
 
-        {newTeams.length > 0 && 
+        {(newTeams.length > 0 && teamsFromGurobi === true) && 
           <div className="newTeams">
             <br/>
-            <h3>New team suggestions</h3>
+            <h3>New team suggestions from Gurobi</h3>
             <br/>
             <Table striped>
               <tbody>
@@ -650,6 +689,29 @@ export default function Activity() {
           </div>
         }
 
+        {(newTeams.length > 0 && teamsFromSwagger === true) && 
+          <div className="newTeams">
+            <br/>
+            <h3>New team suggestions from Swagger</h3>
+            <br/>
+            <Table striped>
+              <tbody>
+                <tr>
+                  <th>Team number</th>
+                  <th>Member1</th>
+                  <th>Member2</th>
+                </tr>
+                {Object.values(newTeams).map((item, index) => (
+                  <tr>
+                    <td>{index+1}</td>
+                    <td>{item.user1}</td>
+                    <td>{item.user2}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        }
 
         {(reviewRequestsSent === true || reviews.length > 0)&&
           <div className="submittedReviews">

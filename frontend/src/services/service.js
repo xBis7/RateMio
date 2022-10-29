@@ -6,8 +6,12 @@ class DataService {
     return axios.post('/users/new', user);
   }
 
-  getTeamSuggestions(activityid) {
+  getTeamSuggestionsWithGurobi(activityid) {
     return axios.get(`/activities/${activityid}/matchmaking`);
+  }
+
+  getTeamSuggestionsWithSwagger(data) {
+    return axios.post('http://localhost:9090/swagger/api/matchmaking', data);
   }
 
   refreshActivityMemberNum(activityid, membernum) {
