@@ -2,6 +2,7 @@ package com.xbis.daos;
 
 import com.xbis.models.Activity;
 import com.xbis.models.User;
+import com.xbis.utils.PasswordUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

@@ -1,4 +1,4 @@
-package com.xbis.daos;
+package com.xbis.utils;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -9,12 +9,16 @@ import java.util.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-public class PasswordUtil {
+public final class PasswordUtil {
 
   public static final int ITERATIONS = 1000;
   public static final int KEY_LENGTH = 512;
   private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
   private static final SecureRandom RAND = new SecureRandom();
+
+  private PasswordUtil() {
+    throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+  }
 
   public static String generateSalt() {
 
@@ -46,7 +50,8 @@ public class PasswordUtil {
     return hashedPass;
   }
 
-  public static boolean verifyThePassword(String plainTextPassword, String hashedPassword, String salt) {
+  public static boolean verifyThePassword(String plainTextPassword,
+                                          String hashedPassword, String salt) {
     String encryptedPass = hashThePassword(plainTextPassword, salt);
     return encryptedPass.equals(hashedPassword);
   }
