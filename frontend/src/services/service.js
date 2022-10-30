@@ -22,6 +22,10 @@ class DataService {
     });
   }
 
+  refreshActivityMemberNumFromDB(activityid) {
+    return axios.get(`/activities/${activityid}/activityMembers/refreshFromDB`);
+  }
+
   newReview(reviewerId, reviewedId, activityId, 
             quality, collaboration, preference) {
     return axios.post('/reviews/new', null, {

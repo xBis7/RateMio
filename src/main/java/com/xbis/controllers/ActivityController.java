@@ -188,9 +188,21 @@ public class ActivityController {
 
     Activity activity = activityService.getActivityObject(activityid);
 
-    //activityService.refreshMemberNum(activity);
-
     activityService.updateMemberNum(activity, memberNum + 1);
+
+    confToken.setSuccess(true);
+    return confToken;
+  }
+
+  @RequestMapping(value = "/activities/{activityid}/activityMembers/refreshFromDB",
+      method = RequestMethod.GET,
+      produces = {"application/json"})
+  public ConfToken refreshActivityMemberNumFromDB(@PathVariable("activityid") long activityid) {
+    ConfToken confToken = new ConfToken(false);
+
+    Activity activity = activityService.getActivityObject(activityid);
+
+    activityService.refreshMemberNum(activity);
 
     confToken.setSuccess(true);
     return confToken;

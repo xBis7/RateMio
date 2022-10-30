@@ -183,7 +183,21 @@ export default function Dashboard() {
         if(JSON.stringify(response.data.success) === 'true') {
           window.location.reload();
         } else {
-          alert('User addition failed!');
+          alert('User addition to activity members failed!');
+        }
+      }).catch(err => {
+        setErrMessage('Server Error: ' + err.response.data);
+        alert(errMessage);
+      });
+  }
+
+  const refreshActivityMembersFromDB = (activityId) => {
+    DataService.refreshActivityMemberNumFromDB(activityId)
+      .then(response => {
+        if(JSON.stringify(response.data.success) === 'true') {
+          window.location.reload();
+        } else {
+          alert('Refreshing member number from DB failed!');
         }
       }).catch(err => {
         setErrMessage('Server Error: ' + err.response.data);
@@ -383,10 +397,19 @@ export default function Dashboard() {
                       <tr>
                         <th>Number of members</th>
                         {/* <th>Number of teams</th> */}
+                        <th>Refresh numbers</th>
                       </tr>
                         <tr>
                           <td>{item[3]-1}</td>
                           {/* <td>{item[4]}</td> */}
+                          <td>
+                            <Button 
+                              variant='secondary' 
+                              onClick={() => refreshActivityMembersFromDB(item[0])}
+                            >
+                              Refresh
+                            </Button>
+                          </td>
                         </tr>
                     </tbody>
                   </Table>
