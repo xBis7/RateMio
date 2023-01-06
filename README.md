@@ -198,14 +198,16 @@ $ sudo snap install intellij-idea-community –classic
 
 * VSCode
 <br/>
-.deb package from site
+
+Get the .deb package from site
 ```
 $ sudo apt install ./codeXXX.deb
 ```
 
 * Apache Tomcat
 <br/>
-[get binaries code tar](https://tomcat.apache.org/download-90.cgi) and then extract it
+
+[Get binaries code tar](https://tomcat.apache.org/download-90.cgi) and then extract it
 
 ```
 $ sudo mv <apache dir name> /opt
@@ -236,7 +238,7 @@ in frontend root
 $ npm install
 ```
 
-you might have to install npm locally, repeat the above command inside `/frontend`
+You might have to install npm locally, repeat the above command inside `/frontend`
 
 * run client
 ```
@@ -245,7 +247,8 @@ $ npm start
 
 * Gurobi optimizer
 <br/>
-install gurobi optimizer and extract it under `/opt`
+
+Install gurobi optimizer and extract it under `/opt`
 ```
 $ sudo nano /etc/profile
 export GUROBI_HOME="/opt/gurobi952/linux64"
@@ -253,4 +256,4 @@ export PATH="${PATH}:${GUROBI_HOME}/bin"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
 ```
 
-get a license, enter the license on terminal
+Get a license, enter the license on terminal
